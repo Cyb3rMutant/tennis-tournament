@@ -6,9 +6,16 @@ functional:
   - tournaments should have a level of difficulty
   - check for errors in inputed data (i.e., duplicate records, invalid data ...)
   - identify men and women matches and validate data based on that
+  - take in player, prize, ranking points and match data as input from a formatted csv file and/or from form inputs
+  - take in tournament data as input from a doc file and/or from form inputs
+  - display the match results
+  - display player rankings after every match along with their ranking points, player positions and prize money
+  - display tournaments' data
+
 
 
 none functional:
   - ui that is easy to interact with and know when to type in data and when to upload a file
   - user should be able to add tournaments, seasons and locations
   - store player data safely
+  - be able to work with similar data in the future
