@@ -1,0 +1,14 @@
+functional:
+  - the system should be able to update players' positions and rankings.
+  - generate a list of player rankings 
+  - evaluate prizes for each player any time
+  - keep track of any player that gets inputed to the system
+  - tournaments should have a level of difficulty
+  - check for errors in inputed data (i.e., duplicate records, invalid data ...)
+  - identify men and women matches and validate data based on that
+
+
+none functional:
+  - ui that is easy to interact with and know when to type in data and when to upload a file
+  - user should be able to add tournaments, seasons and locations
+  - store player data safely
