@@ -1,0 +1,78 @@
+
+.brand{
+    font-weight: bold;
+    font-size: 35px;
+    color: green;
+    margin-left: 25px;
+}
+
+.login-btn{
+    display: none;
+}
+
+.nav-item{
+    font-size: 20px;
+}
+
+
+
+/*Tablet*/
+@media only screen and (min-width: 992px) {
+
+    .login-mobile{
+        display:none;
+    }
+    .login-btn{
+        display: block;
+    }
+
+    .nav-item{
+        padding: 0px 5px 0px 5px;
+        font-size: 17px;
+    }
+    .navbar-nav{
+        margin-right: 20px;
+    }
+    .login-btn{
+        font-size: 15px;
+        margin-right: 40px;
+    }
+    .login-btn:hover{
+        background-color: green;
+    }
+    
+    .brand{
+        margin-left: 100px;
+    }
+
+}
+
+
+
+
+/*Desktop*/
+@media only screen and (min-width: 1400px) {
+    .brand{
+        font-size: 40px;
+    }
+    
+    .nav-item{
+        padding: 0px 22px 0px 22px;
+        font-size: 22px;
+    }
+    .navbar-nav{
+        margin-right: 60px;
+    }
+    .login-btn{
+        font-size: 18px;
+        margin-right: 50px;
+    }
+
+
+}
+
+
+
+
+
+
