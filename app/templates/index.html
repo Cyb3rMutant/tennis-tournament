@@ -1,15 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/index.css') }}">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Homepage</title>
 </head>
-<body>
-    <h1>Testing the Tennis App</h1>
-    <h1>Collections: </h1>
-    {% for col in collections %}
-    <h2 style="color: darksalmon;">{{ col }}</h2>
-    {% endfor %}
-</body>
-</html>
+
+
+<main class="main">
+    <h1>Home</h1>
+    <h2>
+        aaaa
+    </h2>
+
+
+    
+
+</main>
+
+
+{% endblock %}
