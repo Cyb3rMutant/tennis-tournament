@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/view_tournaments.css') }}">
+
+<head>
+    <title>View Matches</title>
+</head>
+
+
+<main class="main">
+
+    <div class="container">
+        <div class="row gy-3" style="padding-top: 13%;">
+            <div class="col-12 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="{{ url_for('static',filename='images/Aberdeen.jpg') }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Aberdeen</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>       
+            </div>
+
+            <div class="col-12 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="{{ url_for('static',filename='images/Birmingham.jpg') }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Belfast</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>       
+            </div>
+
+            <div class="col-12 col-lg-4 col-xl-3">
+                <div class="card">
+                    <img src="{{ url_for('static',filename='images/Belfast.jpg') }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Birmingham</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>       
+            </div>
+
+
+            <div class="col-12 col-lg-4 col-xl-3">
+                <div class="card" >
+                    <img src="{{ url_for('static',filename='images/Bristol.jpg') }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Bristol</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>       
+            </div>
+        </div>
+
+        </div>
+  
+
+    <div class="space-for-bottom" style="margin-top: 5em;">
+
+    </div>
+
+
+    
+
+</main>
+
+
+{% endblock %}

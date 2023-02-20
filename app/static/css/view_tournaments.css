@@ -1,0 +1,18 @@
+@media only screen and (min-width: 996px) {
+    img {
+
+        height: 290px;
+        object-fit: cover;
+    }
+
+}
+
+
+@media only screen and (min-width: 1200px) {
+    img {
+
+        height: 290px;
+        object-fit: cover;
+    }
+
+}
