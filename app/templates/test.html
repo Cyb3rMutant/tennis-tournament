@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Testing the Tennis App</h1>
-    <h1>Collections: </h1>
-    {% for col in collections %}
-    <h2 style="color: darksalmon;">{{ col }}</h2>
-    {% endfor %}
-</body>
-</html>
+ <H1> Login Form </H1>
+ <form action="/register/" method=post>    
+  
+      {{ form.email.label }} : {{ form.email }} <br/>
+      {{ form.password.label }} : {{ form.password }} <br/>  
+    
+    <p><input type=submit value=Login>
+  </form>

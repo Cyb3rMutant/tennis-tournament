@@ -1,4 +1,4 @@
-from player import Player
+from classes.player import Player
 
 
 class Match(object):

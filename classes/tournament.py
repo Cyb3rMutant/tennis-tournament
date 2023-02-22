@@ -1,7 +1,7 @@
-from competition import Competition
-from location import Location
-from prize import Prize
-from datetime import datetime
+from classes.competition import Competition
+from classes.location import Location
+from classes.prize import Prize
+from classes.datetime import datetime
 
 
 class Tournament(object):

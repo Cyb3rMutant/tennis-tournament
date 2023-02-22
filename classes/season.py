@@ -1,4 +1,4 @@
-from tournament import Tournament
+from classes.tournament import Tournament
 
 
 class Season(object):

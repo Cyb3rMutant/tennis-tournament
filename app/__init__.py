@@ -1,14 +1,9 @@
 from flask import Flask
-from pymongo import MongoClient
-import certifi
-
-ca = certifi.where()
-cluster = "mongodb+srv://strings:6Zd69XPFvPbt0Wfw@tennis-tournament.v5i5qjj.mongodb.net/?retryWrites=true&w=majority"
-client = MongoClient(cluster, tlsCAFile=ca)
+import random
+import string
 
 app = Flask(__name__)
-
-db = client.TennisDB
+app.secret_key = ''.join(random.choice(string.ascii_lowercase) for i in range(32)) 
 
 from app import models, routes
 

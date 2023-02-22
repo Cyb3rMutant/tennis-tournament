@@ -1,4 +1,4 @@
-from competition import Competition
+from classes.competition import Competition
 
 
 class CompetitionWomen(Competition):

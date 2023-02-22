@@ -1,0 +1,14 @@
+
+
+
+{% extends "base.html" %}
+{{ super()}}
+{% block content %}
+
+{% if success %}
+  <h1 style="color: green;">{{ message }}</h1>
+{% else %}
+  <h1 style="color: red;">{{ message }}</h1>
+{% endif %}
+
+{% endblock %}

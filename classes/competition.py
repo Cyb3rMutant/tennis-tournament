@@ -1,6 +1,6 @@
 from abc import *
-from match import Match
-from player import Player
+from classes.match import Match
+from classes.player import Player
 
 
 class Competition(object, metaclass=ABCMeta):
