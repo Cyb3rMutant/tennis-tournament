@@ -3,6 +3,9 @@ from os import listdir
 from os.path import isdir, isfile
 import pathlib
 from docx import Document
+import pandas as pd
+import numpy as np
+import re
 
 DATA_PATH = f"{pathlib.Path(__file__).parent.resolve()}/data"
 
@@ -76,8 +79,38 @@ class DataExtractorCSV(DataExtractor):
         super().__init__()
         self.dm.set_mode("csv")
     
-
-
+    def get_players(self):
+        players = {}
+        for doc in self.dm.get_data_files():
+            if(re.findall("PLAYERS.csv$", doc)):
+                df = pd.read_csv(f"{DATA_PATH}/{doc}")
+                player_arr = df.to_numpy().T[0]
+                key = doc.split(" ")[0].lower()
+                players[key] = np.concatenate([df.columns.values, player_arr])
+        return players
+    
+    def get_tournament_prizes(self):
+        prizes = {}
+        for doc in self.dm.get_data_files():
+            if(doc == "PRIZE MONEY.csv"):
+                df = pd.read_csv(f"{DATA_PATH}/{doc}")
+                tournament = ""
+                for row in df.to_numpy():
+                    if(not pd.isnull(row[0])):
+                        tournament = row[0]
+                        prizes[tournament] = {}
+                    prizes[tournament][row[1]] = row[2]
+        return prizes
+    
+    def get_ranking_points(self):
+        points = {}
+        for doc in self.dm.get_data_files():
+            if(doc == "RANKING POINTS.csv"):
+                df = pd.read_csv(f"{DATA_PATH}/{doc}")
+                for c, row in enumerate(df.to_numpy()):
+                    # not sure, theres an input mistake in csv data
+                    points[c+1] = row[0]
+        return points
 class DataExtractorDOCX(DataExtractor):
 
     def __init__(self) -> None:
@@ -114,6 +147,6 @@ if(__name__ == "__main__"):
     # for p in document.paragraphs:
     #     print(p.text)
 
-    de = DataExtractorDOCX()
-    print(de.get_tournament_difficulty())
+    de = DataExtractorCSV()
+    print(de.get_ranking_points())
     
