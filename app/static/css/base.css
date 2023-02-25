@@ -1,19 +1,75 @@
-.brand {
+.navbar-brand {
 	font-weight: bold;
-	font-size: 35px;
-	color: green;
+	font-size: 30px !important;
+	color: #8cff00;;
 	margin-left: 25px;
+	text-decoration: none;
+	font-family: 'Pacifico', cursive;
 }
 
-.nav-item {
+.horizon {
+	color: #fefefe;
+	margin-right: 0 !important; 
+}
+
+.tennis {
+	margin-left: 0 !important;
+}
+
+.tennis:hover {
+	color: #8cff00 !important;
+}
+
+.brand:hover {
+	color: #fefefe;
+}
+
+.nav-link {
 	font-size: 20px;
+	color: #fefefe;
+}
+
+.nav-link:hover {
+	font-size: 20px;
+	color: #ccc;
+}
+
+.active {
+	color: #8cff00 !important;
+}
+
+.navbar {
+	list-style-type: none;
+	margin: 0;
+	padding: 8px;
+	background-color: #0d0a149a;
+	overflow: hidden;
+	border-bottom: 2px solid #8cff00a2;
+
+  }
+
+.login-btn {
+	border: 2px solid #8cff00;
+	color: #8cff00;
+	width: 150px;
+	height: 55px;
+}
+
+.login-btn:hover {
+	background-color: #8cff00;
+	color: #0d0a14;
+}
+
+.navbar-toggler-icon {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-toggler {
+	color: #fefefece !important;
 }
 
 /*Tablet*/
 @media only screen and (min-width: 992px) {
-	.login-btn {
-		display: block;
-	}
 
 	.nav-item {
 		padding: 0px 5px 0px 5px;
@@ -23,15 +79,20 @@
 		margin-right: 20px;
 	}
 	.login-btn {
+		display: block;
 		font-size: 15px;
 		margin-right: 40px;
 	}
 	.login-btn:hover {
-		background-color: green;
+		background-color: #8cff00;
 	}
 
 	.brand {
 		margin-left: 100px;
+	}
+
+	.navbar-brand {
+		font-size: 35px !important;
 	}
 }
 
@@ -51,6 +112,10 @@
 	.login-btn {
 		font-size: 18px;
 		margin-right: 50px;
+	}
+	.active {
+		border-bottom: 2px solid #8cff00;
+		border-radius: 2px;
 	}
 }
 
