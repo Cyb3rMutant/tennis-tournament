@@ -111,6 +111,23 @@ class DataExtractorCSV(DataExtractor):
                     # not sure, theres an input mistake in csv data
                     points[c+1] = row[0]
         return points
+    
+    def get_tournament_matches(self, tournament):
+        
+        tournament = tournament.upper()
+        matches = {}
+        files = self.dm.get_data_files()
+        files.sort()
+        for doc in files:
+            if(re.findall(f"{tournament} ROUND [0-9]+ *", doc.upper())):
+                df = pd.read_csv(f"{DATA_PATH}/{doc}")
+                tournament_round = doc.split(" ")[2]
+                gender = doc.split(" ")[3].split(".")[0].lower()
+                if(not matches.get(gender)):
+                    matches[gender] = {}
+                matches[gender][tournament_round] = df.iloc[:,:4].to_numpy()
+                
+        return matches
 class DataExtractorDOCX(DataExtractor):
 
     def __init__(self) -> None:
@@ -148,5 +165,9 @@ if(__name__ == "__main__"):
     #     print(p.text)
 
     de = DataExtractorCSV()
-    print(de.get_ranking_points())
+    # import pprint 
+    # pp = pprint.PrettyPrinter(indent=4)
+    # pp.pprint(de.get_tournament_matches("tac1"))
+    print(de.get_tournament_matches("tac1"))
+    
     
