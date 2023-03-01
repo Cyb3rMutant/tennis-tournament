@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, jsonify
 from app import app
-from app.models import model
-from app.forms import LoginForm
+from models import model
+from forms import LoginForm
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -13,7 +13,7 @@ def login():
         print("2")
         match status:= model.login(form.email.data, form.password.data):
             case 0:
-                return ''
+                return "success"
             case 1:
                 return "user not found"
             case 2:
@@ -21,3 +21,4 @@ def login():
             case _:
                 return status
 
+    else: return "success"

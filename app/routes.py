@@ -1,1 +1,9 @@
-from app import add_admin, add_matches, add_season, admin, home, login, view_matches, view_player_rankings, view_tournaments
+from add_admin import *
+from add_matches import *
+from add_season import *
+from admin import *
+from home import *
+from login import *
+from view_matches import *
+from view_player_rankings import *
+from view_tournaments import *

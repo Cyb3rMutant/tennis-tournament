@@ -1,7 +1,8 @@
 from flask import render_template, request
 from app import app
-from app.models import model
-from app.forms import LoginForm
+from models import model
+from forms import LoginForm
+print("Hello")
 
 
 @app.route('/home')
