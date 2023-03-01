@@ -2,7 +2,6 @@ from flask import render_template, request
 from app import app
 from models import model
 from forms import LoginForm
-print("Hello")
 
 
 @app.route('/home')

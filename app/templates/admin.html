@@ -24,43 +24,62 @@
 
 
                     
-                    <form>
+                    <form id="master-form" method="POST"  enctype="multipart/form-data">
+                        
                         <div class="form-group sp">
-                            <label for="formFile" class="form-label">Input Season Data</label>
-                            <div class="input-group">
-                                <input class="form-control width100" type="file" id="formFile">
+                            
+                            <label for="formFile" class="form-label"           id ="file-label-1">Input Season Data</label>
+                            <div class="input-group"                            id= "file-group-1">
+                                <input class="form-control width100" type="file" id="file-input-1">
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-info" onclick="uploadFiles(1)">Validate</button>
+                                    <button type="button" class="btn btn-info" id="my-button-1"  onclick="uploadFiles(1)">Validate</button>
                                 </span>
                             </div>
 
-                            <label for="formFile" class="form-label" style="display: none;">Input Players Data</label>    
-                            <div class="input-group" style="display: none;">
-                                <input class="form-control width100" type="file" id="formFile">
+
+
+                            <label for="formFile" class="form-label" style="display: none;" id= "file-label-2">Input Players Data</label>    
+                            <div class="input-group" style="display: none;"     id= "file-group-2">
+                                <input class="form-control width100" type="file" id="file-input-2" multiple>
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-info" onclick="uploadFiles(2)">Validate</button>
+                                    <button type="button" class="btn btn-info" id="my-button-2" onclick="uploadFiles(2)">Validate</button>
                                 </span>
                             </div>
 
-                            <label for="formFile" class="form-label" style="display: none;">Input Prize Data</label>
-                            <div class="input-group" style="display: none;">
-                                <input class="form-control width100" type="file" id="formFile">
+
+
+
+                            <label for="formFile" class="form-label" style="display: none;"  id= "file-label-3">Input Prize Data</label>
+                            <div class="input-group" style="display: none;" id= "file-group-3">
+                                <input class="form-control width100" type="file" id="file-input-3">
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-info" onclick="uploadFiles(3)">Validate</button>
+                                    <button type="button" class="btn btn-info" id="my-button-3" onclick="uploadFiles(3)">Validate</button>
                                 </span>
                             </div>
 
-                            <label for="formFile" class="form-label" style="display: none;">Input Match Data</label>
-                            <div class="input-group" style="display: none;">
-                                <input class="form-control width100" type="file" id="formFile">
+
+
+                            <label for="formFile" class="form-label" style="display: none;" id= "file-label-4">Input Match Data</label>
+                            <div class="input-group" style="display: none;" id= "file-group-4">
+                                <input class="form-control width100" type="file" id="file-input-4" multiple>
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-info" onclick="uploadFiles(4)">Validate</button>
+                                    <button type="button" class="btn btn-info" id="my-button-4" onclick="uploadFiles(4)">Validate</button>
                                 </span>
                             </div>
 
-                            <button type="submit" class="btn btn-primary" style="margin-top: 5%; display: none;">Upload</button>
+
+                            
+                            <button type="submit" id = "upload" class="btn btn-primary" style="margin-top: 5%; display: none;">Upload</button>
                         </div>
+                    
+                    
+                    
                     </form>
+
+
+
+
+
                 </div>
             </div>
             <div class="col-md-3 offset-md-2 border bg-dark text-center">
@@ -76,6 +95,104 @@
     </div>
 </main>
 
+
+<script>
+    function uploadFiles(num) {
+
+      const fileInput = document.getElementById(`file-input-${num}`);
+      const button = document.getElementById(`my-button-${num}`);
+      console.log(num)
+
+      var files = fileInput.files;
+      var formData = new FormData();
+      for (var i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
+
+
+      $.ajax({
+        url: `/endpoint${num}`,
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          if (response === '') {
+
+            if (num === 4){
+                button.disabled = true;         
+                fileInput.disabled = true; 
+                $(`#upload`).show();
+            }
+
+            else{
+                $(`#file-label-${num+1}`).show();
+                $(`#file-group-${num+1}`).show();
+
+                button.disabled = true;         
+                fileInput.disabled = true; 
+                button.textContent = "Uploaded";
+
+            }
+          }          
+          else{
+            console.log("Noooooooooooo")
+          }
+
+        }
+      });
+    }
+
+
+    $('#master-form').submit(function(event) {
+      event.preventDefault();
+      
+      var formData = new FormData();
+
+  
+      const fileInput = document.getElementById(`file-input-1`);
+      var files = fileInput.files;
+      for (var i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
+
+
+      const fileInput2 = document.getElementById(`file-input-2`);
+      var files2 = fileInput2.files;
+      for (var i = 0; i < files2.length; i++) {
+        formData.append('files', files2[i]);
+      }
+
+      const fileInput3 = document.getElementById(`file-input-3`);
+      var files3 = fileInput3.files;
+      for (var i = 0; i < files3.length; i++) {
+        formData.append('files', files3[i]);
+      }
+
+      const fileInput4 = document.getElementById(`file-input-4`);
+      var files4 = fileInput4.files;
+      for (var i = 0; i < files4.length; i++) {
+        formData.append('files', files4[i]);
+      }
+
+
+
+
+      $.ajax({
+        url: "/submit-form",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          alert("Nice one brotha");
+        }
+      });
+    });
+
+
+
+    </script>
 
 
 {% endblock %}
