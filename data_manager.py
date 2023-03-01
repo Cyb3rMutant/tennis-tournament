@@ -72,6 +72,8 @@ class DataExtractor(metaclass=ABCMeta):
     def __init__(self) -> None:
         self.dm = DataManager()
         self.dm.set_data_path(DATA_PATH)
+        # self._methods = ["upload", "path"]
+        self._method = "upload"
 
 class DataExtractorCSV(DataExtractor):
 
@@ -134,22 +136,31 @@ class DataExtractorDOCX(DataExtractor):
         super().__init__()
         self.dm.set_mode("docx")
     
-    def get_tournament_difficulty(self):
+    def get_tournament_difficulty(self, file=None):
         '''
         Returns a dictionary containing the tournament name and the tournament difficulty as key value pairs respectively.
         '''
         tournament_dict = {}
-        for doc in self.dm.get_data_files():
-            if(doc == "DEGREE OF DIFFICULTY PER TOURNAMENT.docx"):
-                document = Document(f"{DATA_PATH}/{doc}")
-                # go line by line through the document
-                for i in range(len(document.paragraphs)):
-                    # for every line split the text to get the tournament name and difficulty
-                    tournament = document.paragraphs[i].text
-                    tournament = tournament.split(" – degree of difficulty ")
-                    # add the tournament name and difficulty to the tournament dictionary if they exist on that line
-                    if(len(tournament) > 1):
-                        tournament_dict[tournament[0]] = tournament[1]
+
+        if(self._method.lower() == "upload"):
+            if(file == None):
+                raise FileNotFoundError
+            else:
+                document = Document(file)
+                
+        if(self._method.lower() == "path"):
+            for doc in self.dm.get_data_files():
+                if(doc == "DEGREE OF DIFFICULTY PER TOURNAMENT.docx"):
+                    document = Document(f"{DATA_PATH}/{doc}")
+
+        # go line by line through the document
+        for i in range(len(document.paragraphs)):
+            # for every line split the text to get the tournament name and difficulty
+            tournament = document.paragraphs[i].text
+            tournament = tournament.split(" – degree of difficulty ")
+            # add the tournament name and difficulty to the tournament dictionary if they exist on that line
+            if(len(tournament) > 1):
+                tournament_dict[tournament[0]] = tournament[1]
         return tournament_dict
         
 
@@ -168,6 +179,6 @@ if(__name__ == "__main__"):
     # import pprint 
     # pp = pprint.PrettyPrinter(indent=4)
     # pp.pprint(de.get_tournament_matches("tac1"))
-    print(de.get_tournament_matches("tac1"))
+    print(de.get_tournament_matches("tac1").get("men").get("5")[0][2])
     
     
