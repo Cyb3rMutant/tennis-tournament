@@ -100,7 +100,7 @@
                         url: url,
                         data: $('form').serialize(), // serializes the form's elements.
                         success: function (data) {
-                            if (data === '')
+                            if (data === 'success')
                                 location.reload();
                             document.getElementById("login_message").innerHTML = data;
                         }
