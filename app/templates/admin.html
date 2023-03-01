@@ -4,5 +4,78 @@
 {{ super()}}
 {% block content %}
 
+<main class="main">
+    <div class="container-fluid text-light" style="padding-top: 2%;">
+        <div class="row">
+            <div class="col-md-auto border offset-md-2 bg-dark">
+                <div class="mb-3 text-center">
+
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="top:0%;">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="options" id="optionFile" autocomplete="off" checked> Upload Files
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="options" id="optionForm" autocomplete="off"> Input Form
+                        </label>
+                    </div>
+                    
+                    <h1 style="text-align: center;">Input Data</h1>
+
+
+
+                    
+                    <form>
+                        <div class="form-group sp">
+                            <label for="formFile" class="form-label">Input Season Data</label>
+                            <div class="input-group">
+                                <input class="form-control width100" type="file" id="formFile">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-info" onclick="uploadFiles(1)">Validate</button>
+                                </span>
+                            </div>
+
+                            <label for="formFile" class="form-label" style="display: none;">Input Players Data</label>    
+                            <div class="input-group" style="display: none;">
+                                <input class="form-control width100" type="file" id="formFile">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-info" onclick="uploadFiles(2)">Validate</button>
+                                </span>
+                            </div>
+
+                            <label for="formFile" class="form-label" style="display: none;">Input Prize Data</label>
+                            <div class="input-group" style="display: none;">
+                                <input class="form-control width100" type="file" id="formFile">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-info" onclick="uploadFiles(3)">Validate</button>
+                                </span>
+                            </div>
+
+                            <label for="formFile" class="form-label" style="display: none;">Input Match Data</label>
+                            <div class="input-group" style="display: none;">
+                                <input class="form-control width100" type="file" id="formFile">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-info" onclick="uploadFiles(4)">Validate</button>
+                                </span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="margin-top: 5%; display: none;">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-3 offset-md-2 border bg-dark text-center">
+                <h1 style="color: red;", id="error_message"></h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 offset-md-8" style="margin-top: 3%;">
+                <a href="###" class="btn btn-primary w-100">Add New User</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+
 
 {% endblock %}
