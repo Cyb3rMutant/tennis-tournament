@@ -26,21 +26,21 @@ def runner(app):
     return app.test_cli_runner()
 
 
-def test_login_fail_user(client):
+def test_001_login_fail_user(client):
     response = client.post(
         '/login/', data={'email': 'user@gmail.com', 'password': ''})
     # response = client.get('/login/')
     assert b"user not found" in response.data
 
 
-def test_login_fail_pass(client):
+def test_002_login_fail_pass(client):
     response = client.post(
         '/login/', data={'email': 'test@t.c', 'password': 'hhhhhh'})
     # response = client.get('/login/')
     assert b"incorrect password" in response.data
 
 
-def test_login_success(client):
+def test_003_login_success(client):
     response = client.post(
         '/login/', data={'email': 'test@t.c', 'password': ''})
     # response = client.get('/login/')
