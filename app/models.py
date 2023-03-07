@@ -7,6 +7,8 @@ from classes.admin import Admin
 from classes.user import User
 from classes.season import Season
 from bson.objectid import ObjectId
+from classes.rankings import Rankings
+from classes.player import Player
 
 
 import jsonpickle
@@ -18,6 +20,21 @@ class Model():
         cluster = "mongodb+srv://strings:6Zd69XPFvPbt0Wfw@tennis-tournament.v5i5qjj.mongodb.net/?retryWrites=true&w=majority"
         client = MongoClient(cluster, tlsCAFile=ca)
         self.__db = client.TennisDB
+        self.__players = {'M': Rankings(), 'F': Rankings()}
+
+        m_players = self.__db.players.find({"type": 'M'}).sort('ranking_points')
+        rank = 0
+        for p in m_players:
+            player = Player(p['_id'], p['name'], p['ranking_points'])
+            self.__players['M'].add_player(player, rank)
+            rank+=1
+
+        f_players = self.__db.players.find({"type": 'F'}).sort('ranking_points')
+        rank = 0
+        for p in f_players:
+            player = Player(p['_id'], p['name'], p['ranking_points'])
+            self.__players['F'].add_player(player, rank)
+            rank+=1
 
         seasons = self.__db.seasons.find()
         self.__seasons = dict()
