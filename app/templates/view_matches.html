@@ -1,8 +1,105 @@
-
-
 {% extends "base.html" %}
 {{ super()}}
+{% block head %}
+     <script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
+     <script src="{{ url_for('static',filename='jquery/jTournament.js') }}"></script>
+{% endblock %}
 {% block content %}
+  <div>
+     <canvas id="tournament"></canvas>
+  </div>
+    <script>
+ var matchInfo = {
+    rounds: [
+
+    {
+        name: "Round1",
+        matches: [{
+            p1: {name: "Bill"},
+            p2: {name: "Bob", score: 1},
+            winner: 1
+        }, {
+            p1: {name: "Sam"},
+            p2: {name: "Duddly"},
+            winner: 2
+        }, {
+            p1: {name: "Andy"},
+            p2: {name: "Biff"},
+            winner: 1
+        }, {
+            p1: {name: "Phill"},
+            p2: {name: "Peter"},
+            winner: 1
+        }, {
+            p1: {name: "John"},
+            p2: {name: "Dave"},
+            winner: 2
+        }, {
+            p1: {name: "Xaus"},
+            p2: {name: "James"},
+            winner: 2
+        }, {
+            p1: {name: "Kenny"},
+            p2: {name: "Nick"},
+            winner: 1
+        }, {
+            p1: {name: "Fred"},
+            p2: {name: "Pat"},
+            winner: 2
+        }]
+    }, {
+        name: "Round2",
+        matches: [{
+            p1: {name: "Bill"},
+            p2: null
+        }, {
+            p1: null,
+            p2: null
+        }, {
+            p1: null,
+            p2: null
+        }, {
+            p1: null,
+            p2: null
+        }]
+    }, {
+        name: "Round3",
+        matches: [{
+            p1: null,
+            p2: null
+        }, {
+            p1: null,
+            p2: null
+        }]
+    }, {
+        name: "Round4",
+        matches: [{
+            p1: null,
+            p2: null
+        }, ]
+    }]
+};
+    var options = {
+			width: 100,
+			height: 30,
+			border_width: "1",
+			background_color: "#c0c0c0",
+			text_style: "bold 15px verdana",
+			h_spacing: 10,
+			v_spacing: 10,
+			text_color: "#FFFFFF",
+			text_color_loss: "#777777",
+			gradient: [{loc: 0, color: '#4F4F4F'},
+			   {loc: 0.5, color: '#1B1B1B'},
+			   {loc: 0.5, color: '#000000'}],
+			score: {active: true},
+			links: {active: true},
+			url: ""  // Location of canvas background image with trailing slash!.
+    }
+        $(document).ready(function () {
+            $('#tournament').jTournament(options, matchInfo);
+        });
+    </script>
 
 
 {% endblock %}

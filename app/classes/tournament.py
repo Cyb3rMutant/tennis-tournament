@@ -1,4 +1,4 @@
-from classes.competition import Competition
+from classes.competition_factory import Competition_factory
 from classes.location import Location
 from classes.prize import Prize
 from datetime import datetime
@@ -44,12 +44,8 @@ class Tournament(object):
     def set_difficulty(self, difficulty: float) -> None:
         self.__difficulty = difficulty
 
-    def add_competition(self, players: list, matches: list) -> bool:
-        try:
-            self.__competitions.append(Competition(players, matches))
-            return True
-        except:
-            return False
+    def add_competition(self, t_type: str, players: list, matches: list) -> bool:
+        self.__competitions.append(Competition_factory.get_competition_type(t_type)(players, matches))
 
     def update_prizes(self, prize, position) -> bool:
         try:
@@ -57,3 +53,7 @@ class Tournament(object):
             return True
         except:
             return False
+
+
+    def to_json(self,):
+        pass

@@ -23,39 +23,31 @@ class MatchTree():
 
 
 class Competition(object, metaclass=ABCMeta):
-    @abstractmethod
     def __init__(self, players: list, matches: list, sets_to_win: int) -> None:
 
-        self.__players: list = list()
+        self._players: list = list()
 
-        self.__sets_to_win: int = sets_to_win
+        self._sets_to_win: int = sets_to_win
 
-        self.__matches: Match = MatchTree()
+        self._matches = matches
 
-    @abstractmethod
+        # self._matches: Match = MatchTree()
+
     def get_players(self) -> list:
-        return self.__players
+        return self._players
 
-    @abstractmethod
     def get_sets_to_win(self) -> int:
-        return self.__sets_to_win
+        return self._sets_to_win
 
-    @abstractmethod
     def get_matches(self) -> list:
-        return self.__matches
+        return self._matches
 
-    @abstractmethod
     def set_players(self, players) -> None:
-        self.__players = players
+        self._players = players
 
-    @abstractmethod
     def set_sets_to_win(self, sets_to_win: int) -> int:
-        self.__sets_to_win = sets_to_win
+        self._sets_to_win = sets_to_win
 
-    @abstractmethod
     def set_matches(self, matches) -> None:
-        self.__matches = matches
+        self._matches = matches
 
-    @abstractmethod
-    def evaluate_winner(self):
-        pass

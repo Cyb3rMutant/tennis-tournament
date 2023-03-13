@@ -5,6 +5,9 @@ class Rankings(object):
     def __init__(self):
         self.__positions: list = list()
 
+    def get_positions(self):
+        return self.__positions
+
     def add_player(self, player: Player, position: int) -> bool:
         try:
             self.__positions.insert(position-1, player)
@@ -13,5 +16,4 @@ class Rankings(object):
             return False
 
     def update_positions(self) -> bool:
-        # ˅
         pass
