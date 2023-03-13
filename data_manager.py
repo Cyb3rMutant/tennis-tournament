@@ -6,8 +6,16 @@ from docx import Document
 import pandas as pd
 import numpy as np
 import re
+import zipfile
 
 DATA_PATH = f"{pathlib.Path(__file__).parent.resolve()}/data"
+
+def check_filename(filename, check_name, check_extension):
+    # get the filename and extension (remove path if exists)
+    filename = filename.split("/")[-1]
+    filename = filename.split(".")
+
+    return (filename[0].lower() != check_name.lower() or filename[1].lower() != check_extension.lower())
 
 class ModeNotFoundError(Exception):
     pass
@@ -15,10 +23,9 @@ class ModeNotFoundError(Exception):
 class MethodNotFoundError(Exception):
     pass
 
-
 class DataManager:
     '''
-    The Data Manager class is used to extract data from csv and docx files (WIP)
+    The Data Manager class is used to find files in a data directory.
 
     Attributes:
         _mode: A string referring to the extension of the file(s) being read from, by default its "csv".
@@ -72,6 +79,16 @@ class DataManager:
         return files
 
 class DataExtractor(metaclass=ABCMeta):
+    '''
+    The Data Extractor class is used to extract data from csv and docx files (WIP)
+
+    Attributes:
+        _method: A string describing how the data files are inputted.
+        _methods: An array of all the valid methods.
+        _dm: A Data Manager Object used to retrieve all the files in a data directory.
+
+    '''
+
 
     def __init__(self) -> None:
         self.dm = DataManager()
@@ -89,7 +106,7 @@ class DataExtractor(metaclass=ABCMeta):
         else:
             raise MethodNotFoundError(f'"{method}" is not a valid method.')
 
-    def get_mode(self):
+    def get_method(self):
         '''
         Returns the current method.
         '''
@@ -101,13 +118,13 @@ class DataExtractorCSV(DataExtractor):
         super().__init__()
         self.dm.set_mode("csv")
 
-    def get_players(self, files=None):
+    def get_players(self, files=[]):
 
         file_names = []
         file = None
 
         if(self._method.lower() == "upload"):
-            if(files == None):
+            if(files == []):
                 raise FileNotFoundError("No player files passed to method")
             else:
                 file_names = [file.filename for file in files]
@@ -132,12 +149,18 @@ class DataExtractorCSV(DataExtractor):
                 players[key] = np.concatenate([df.columns.values, player_arr])
         return players
     
-    def get_tournament_prizes(self, file=None):
+    def get_tournament_prizes(self, files=[]):
 
+        file = None
         if(self._method.lower() == "upload"):
-            if(file == None):
-                raise FileNotFoundError("No file was inputted")
-                
+            if(files == []):
+                raise FileNotFoundError("No files were inputted")
+            else:
+                file = files[0]  
+                # check if the file name is prize money
+                if(check_filename(file.filename, "PRIZE MONEY", "csv")):
+                    return {}  
+            
         if(self._method.lower() == "path"):
             file = f"{DATA_PATH}/PRIZE MONEY.csv"
 
@@ -151,12 +174,18 @@ class DataExtractorCSV(DataExtractor):
             prizes[tournament][row[1]] = row[2]
         return prizes
     
-    def get_ranking_points(self, file=None):
+    def get_ranking_points(self, files=[]):
 
+        file = None
         if(self._method.lower() == "upload"):
-            if(file == None):
-                raise FileNotFoundError("No file was inputted")
-                
+            if(files == []):
+                raise FileNotFoundError("No files were inputted")
+            else:
+                file = files[0]   
+                # check if the file name is ranking points
+                if(check_filename(file.filename, "RANKING POINTS", "csv")):
+                    return {}
+
         if(self._method.lower() == "path"):
             file = f"{DATA_PATH}/RANKING POINTS.csv"
 
@@ -167,13 +196,13 @@ class DataExtractorCSV(DataExtractor):
             points[c+1] = row[0]
         return points
     
-    def get_tournament_matches(self, tournament, files=None):
+    def get_tournament_matches(self, tournament, files=[]):
 
         df = None
         file = None
         
         if(self._method.lower() == "upload"):
-            if(files == None):
+            if(files == []):
                 raise FileNotFoundError("No round files passed to method")
             else:
                 file_names = [file.filename for file in files]
@@ -183,12 +212,12 @@ class DataExtractorCSV(DataExtractor):
 
         tournament = tournament.upper()
         matches = {}
-        file_names.sort()
         for i in range(len(file_names)):
             doc = file_names[i]
             if(re.findall(f"{tournament} ROUND [0-9]+ *", doc.upper())):
                 if(self._method.lower() == "upload"):
                     file = files[i]
+                    print(file)
                 elif(self._method.lower() == "path"):
                     file = f"{DATA_PATH}/{doc}"
                 df = pd.read_csv(file)
@@ -205,20 +234,28 @@ class DataExtractorDOCX(DataExtractor):
         super().__init__()
         self.dm.set_mode("docx")
     
-    def get_tournament_difficulty(self, file=None):
+    def get_tournament_difficulty(self, files=[]):
         '''
         Returns a dictionary containing the tournament name and the tournament difficulty as key value pairs respectively.
         '''
         tournament_dict = {}
+        file = None
 
         if(self._method.lower() == "upload"):
-            if(file == None):
+            if(files == []):
                 raise FileNotFoundError("No file was inputted")
+            else:
+                file = files[0]
+
                 
         if(self._method.lower() == "path"):
             file = f"{DATA_PATH}/DEGREE OF DIFFICULTY PER TOURNAMENT.docx"
         
-        document = Document(file)
+        try:
+            document = Document(file)
+        except zipfile.BadZipFile:
+            return {}
+
         # go line by line through the document
         for i in range(len(document.paragraphs)):
             # for every line split the text to get the tournament name and difficulty
@@ -231,6 +268,12 @@ class DataExtractorDOCX(DataExtractor):
         
 
 if(__name__ == "__main__"):
+
+    def openFile(files, filename):
+        fp = open(f"data/{filename}", 'rb')
+        file = FileStorage(fp)
+        files.append(file)
+
     from werkzeug.datastructures import FileStorage
 
     # dm = DataManager()
@@ -252,11 +295,13 @@ if(__name__ == "__main__"):
     # print(de.get_tournament_matches("tac1").get("men").get("5")[0][2])
     
     files = []
-    fp = open(f"data/TAE21 ROUND 2 MEN.csv", 'rb')
-    file = FileStorage(fp)
-    files.append(file)
+    openFile(files, "MALE PLAYERS.csv")
+    # openFile(files, "TAC1 ROUND 5 MEN.csv")
+    # openFile(files, "TAC1 ROUND 2 LADIES.csv")
+    # openFile(files, "TAC1 ROUND 3 LADIES.csv")
+    # openFile(files, "PRIZE MONEY.csv")
     
-    print(de.get_tournament_matches(tournament="tae21",files=files))
+    print(de.get_tournament_prizes(files=files))
 
 
     
