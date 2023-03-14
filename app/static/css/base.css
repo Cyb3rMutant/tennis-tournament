@@ -68,6 +68,13 @@
 	color: #fefefece !important;
 }
 
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-color: red;
+  }
+
 /*Tablet*/
 @media only screen and (min-width: 992px) {
 

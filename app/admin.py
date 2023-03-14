@@ -8,7 +8,20 @@ def admin():
     form = LoginForm(request.form)
     return render_template("admin.html", form=form, logged_in=model.logged_in())
 
+@app.route('/add-admin')
+def add_admin():
+    form = LoginForm(request.form)
+    return render_template("add_admin.html", form=form, logged_in=model.logged_in())
 
+@app.route('/add-matches')
+def add_matches():
+    form = LoginForm(request.form)
+    return render_template("add_matches.html", form=form, logged_in=model.logged_in())
+
+@app.route('/add-season')
+def add_season():
+    form = LoginForm(request.form)
+    return render_template("add_season.html", form=form, logged_in=model.logged_in())
 
 
 

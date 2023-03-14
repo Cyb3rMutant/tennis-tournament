@@ -23,6 +23,10 @@ class ModeNotFoundError(Exception):
 class MethodNotFoundError(Exception):
     pass
 
+class WrongFileExtensionError(Exception):
+    pass
+
+
 class DataManager:
     '''
     The Data Manager class is used to find files in a data directory.
@@ -254,7 +258,7 @@ class DataExtractorDOCX(DataExtractor):
         try:
             document = Document(file)
         except zipfile.BadZipFile:
-            return {}
+            raise WrongFileExtensionError("The passed file is not a document")
 
         # go line by line through the document
         for i in range(len(document.paragraphs)):
@@ -286,7 +290,7 @@ if(__name__ == "__main__"):
     # for p in document.paragraphs:
     #     print(p.text)
 
-    de = DataExtractorCSV()
+    de = DataExtractorDOCX()
     # de.set_method("path")
     # print(de.get_tournament_matches("tac1"))
     # import pprint 
@@ -295,13 +299,25 @@ if(__name__ == "__main__"):
     # print(de.get_tournament_matches("tac1").get("men").get("5")[0][2])
     
     files = []
+    # openFile(files, "DEGREE OF DIFFICULTY PER TOURNAMENT.docx")
     openFile(files, "MALE PLAYERS.csv")
     # openFile(files, "TAC1 ROUND 5 MEN.csv")
     # openFile(files, "TAC1 ROUND 2 LADIES.csv")
     # openFile(files, "TAC1 ROUND 3 LADIES.csv")
     # openFile(files, "PRIZE MONEY.csv")
     
-    print(de.get_tournament_prizes(files=files))
+    # print(de.get_tournament_prizes(files=files))
+    try:
+        if(de.get_tournament_difficulty(files) == {}):
+            print("wrong file uploaded")
+        else:
+            print(de.get_tournament_difficulty(files))
+    except WrongFileExtensionError as we:
+        print("wrong extension")
+        print(we)
+    except FileNotFoundError as fe:
+        print(fe)
+        print("files were not inputted")
 
 
     
