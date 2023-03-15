@@ -23,7 +23,7 @@ class Model():
         client = MongoClient(cluster, tlsCAFile=ca)
         self.__db = client.TennisDB
         self.__players = {'M': Rankings(), 'F': Rankings()}
-        self.__tournament_cache: [ObjectId] = list()
+        self.__tournament_cache: [ObjectId] = dict()
 
         m_players = self.__db.players.find({"type": 'M'}).sort('ranking_points')
         rank = 0
@@ -72,11 +72,11 @@ class Model():
         return self.__seasons
     
     def get_tournament(self, s_id, t_id):
-        tournament = self.__seasons[ObjectId(s_id)].get_tournaments()[ObjectId(t_id)]
         if t_id in self.__tournament_cache:
             print("in")
-            return tournament.to_json()
+            return self.__tournament_cache[t_id]
 
+        tournament = self.__seasons[ObjectId(s_id)].get_tournaments()[ObjectId(t_id)]
         competitions = self.__db.competitions.find({"tournament" : ObjectId(t_id)})
 
         for c in competitions:
@@ -85,16 +85,16 @@ class Model():
             final = self.__db.matches.find({"competition_id": c["_id"]}).sort("round",-1).limit(1)[0]
             matches = [Match(players={"A":players[final["players"]["A"]],"B":players[final["players"]["B"]]}, sets=final["sets"], round= final["round"])]
             for match in matches:
-                if match.get_round()-1 == 1:
+                if not match.get_round()-1:
                     break
                 for player in match.get_players().values():
                     prev = self.__db.matches.find_one({"competition_id": c["_id"], "round": match.get_round()-1, "$or":[{"players.A": player.get_id()}, {"players.B": player.get_id()}]})
                     matches.append(Match(players={"A":players[prev["players"]["A"]],"B":players[prev["players"]["B"]]}, sets=prev["sets"], round= prev["round"]))
 
-            print(matches)
             tournament.add_competition(c["type"], players, matches)
 
-        return tournament.to_json()
+        self.__tournament_cache[t_id] = tournament.to_json()
+        return self.__tournament_cache[t_id]
 
     def player_ids_to_objects(self, ids: [ObjectId], p_tupe : str) -> dict:
         players = {}
