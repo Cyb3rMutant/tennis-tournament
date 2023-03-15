@@ -3,6 +3,10 @@ from app import app
 from models import model
 from forms import LoginForm
 
+import sys
+sys.path.append('..')
+from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX
+
 @app.route('/admin')
 def admin():
     form = LoginForm(request.form)
@@ -24,37 +28,55 @@ def add_season():
     return render_template("add_season.html", form=form, logged_in=model.logged_in())
 
 
-
+#Tournament difficulty (Single file)
 @app.route('/endpoint1', methods=['POST'])
 def endpoint1():
-    print("endpoint1")
     files = request.files.getlist('files')
-    for file in files:
-        print(file.filename)
-    # print(files)
-    return ''
+    de = DataExtractorDOCX()
+    
+    match(de.get_tournament_difficulty(files)):
+        case -1:
+            return 'File is a fake docx'
+        case -2:
+            return 'File is not a docx'
+        case -3:
+            return 'File is docx but isnt formatted correctly'
+        case _:
+            return ''
 
+
+
+#Players (Multiple files)
 @app.route('/endpoint2', methods=['POST'])
 def endpoint2():
     print("endpoint2")
     files = request.files.getlist('files')
     for file in files:
         print(file.filename)
-    # print(files)
     return ''
 
 
+#Prize money (Single file)
 @app.route('/endpoint3', methods=['POST'])
 def endpoint3():
-    print("endpoint3")
     files = request.files.getlist('files')
-    for file in files:
-        print(file.filename)
-    # print(files)
-    return ''
+    de = DataExtractorCSV()
+
+    match(de.get_tournament_prizes(files)):
+        case -1:
+            return 'File needs to have name with prize money formatted as csv'
+        
+        #Room for other cases 
+        # (Actual validating that the file has correct contents and not words)
+        
+
+        case _:
+            return ''
 
 
 
+
+#Match data (Multiple files)
 @app.route('/endpoint4', methods=['POST'])
 def endpoint4():
     print("endpoint4")

@@ -132,11 +132,15 @@
                 button.disabled = true;         
                 fileInput.disabled = true; 
                 button.textContent = "Uploaded";
+                
 
             }
+            document.getElementById("error_message").innerHTML = '';
+
           }          
           else{
-            console.log("Noooooooooooo")
+            document.getElementById("error_message").innerHTML = response;
+
           }
 
         }

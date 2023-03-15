@@ -163,7 +163,7 @@ class DataExtractorCSV(DataExtractor):
                 file = files[0]  
                 # check if the file name is prize money
                 if(check_filename(file.filename, "PRIZE MONEY", "csv")):
-                    return {}  
+                    return -1  
             
         if(self._method.lower() == "path"):
             file = f"{DATA_PATH}/PRIZE MONEY.csv"
@@ -255,10 +255,19 @@ class DataExtractorDOCX(DataExtractor):
         if(self._method.lower() == "path"):
             file = f"{DATA_PATH}/DEGREE OF DIFFICULTY PER TOURNAMENT.docx"
         
-        try:
-            document = Document(file)
-        except zipfile.BadZipFile:
-            raise WrongFileExtensionError("The passed file is not a document")
+        #VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION
+        #Case 1, file is docx but type is invalid (it returns a zipfile error if it was manually created docx)
+        if file.filename.lower().endswith('docx'):
+            try:
+                document = Document(file)
+            #Chuck this error if they made a docx by doing 'New file --> aaa.docx' and havent opened and edited it (idk why but its invalid)
+            except:
+                return -1
+        #Case 2, File doesnt end in docx
+        else:
+            return -2
+
+
 
         # go line by line through the document
         for i in range(len(document.paragraphs)):
@@ -268,7 +277,13 @@ class DataExtractorDOCX(DataExtractor):
             # add the tournament name and difficulty to the tournament dictionary if they exist on that line
             if(len(tournament) > 1):
                 tournament_dict[tournament[0]] = tournament[1]
-        return tournament_dict
+        
+        
+        #Case 3: file is well formatted docx (has contents) but contents are invalid
+        if tournament_dict == {}:
+            return -3
+        else:
+            return tournament_dict
         
 
 if(__name__ == "__main__"):
