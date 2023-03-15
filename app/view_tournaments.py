@@ -23,4 +23,7 @@ def view_matches(season, tournament):
 @app.route('/view-player-rankings')
 def view_player_rankings():
     form = LoginForm(request.form)
-    return render_template("view_player_rankings.html", form=form, logged_in=model.logged_in())
+    players = {}
+    rankings = model.get_players()
+    players["Male"] = rankings["M"].get_positions()
+    return render_template("view_player_rankings.html", form=form, logged_in=model.logged_in(), players=players, enumerate=enumerate)

@@ -104,6 +104,9 @@ class Model():
                 continue
             players[p.get_id()] = p
         return players
+    
+    def get_players(self) -> dict:
+        return self.__players
 
 
 model = Model()
