@@ -5,11 +5,16 @@
      <script src="{{ url_for('static',filename='jquery/jTournament.js') }}"></script>
 {% endblock %}
 {% block content %}
+ <button onclick="myFunction()">switch type</button> 
   <div>
      <canvas id="tournament"></canvas>
   </div>
     <script>
-        var matchInfo = JSON.parse('{{ competitions|safe }}')
+        var matchInfo = [];
+        {% for c in competitions %}
+            matchInfo.push(JSON.parse('{{ c|safe }}'));
+        {% endfor %}
+        var type_index = 1;
      console.log(matchInfo);
     var options = {
 			width: 100,
@@ -29,8 +34,13 @@
 			url: ""  // Location of canvas background image with trailing slash!.
     }
         $(document).ready(function () {
-            $('#tournament').jTournament(options, matchInfo);
+            $('#tournament').jTournament(options, matchInfo[type_index]);
         });
+
+        function myFunction(){
+            type_index = type_index ^ 1;
+            $('#tournament').jTournament(options, matchInfo[type_index]);
+        }
     </script>
 
 
