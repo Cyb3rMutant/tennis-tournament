@@ -1,9 +1,8 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request
 from jsonpickle import json
 from app import app
 from models import model
 from forms import LoginForm
-import pprint
 
 
 @app.route('/view-tournaments')

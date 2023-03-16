@@ -1,18 +1,17 @@
 from flask import session
 from passlib.hash import sha256_crypt
-from jinja2.utils import import_string
 from pymongo import MongoClient
 import certifi
 from classes.admin import Admin
-from classes.user import User
 from classes.season import Season
 from bson.objectid import ObjectId
 from classes.rankings import Rankings
 from classes.player import Player
 from classes.prize import Prize
 from classes.match import Match
-
-
+import threading
+from datetime import datetime, timedelta
+from time import sleep
 import jsonpickle
 
 
@@ -52,6 +51,21 @@ class Model():
                 season.add_tournament(t["_id"], t["name"], t["difficulty"], t["location"], t["time"], prizes)
             self.__seasons[s["_id"]] = season
 
+        thread = threading.Thread(target=self.tournament_cache_handler)
+        thread.daemon = True  # Set daemon to True so that the thread terminates when the main thread terminates
+        thread.start()
+
+    def tournament_cache_handler(self):
+        while True:
+            for t in list(self.__tournament_cache):
+                if self.__tournament_cache[t][1] + timedelta(minutes= 30) < datetime.now():
+                    continue
+
+                self.__tournament_cache[t][2].clear()
+
+                self.__tournament_cache.pop(t)
+
+            sleep(600)
 
     def logged_in(self,) -> bool:
         return "user" in session
@@ -89,7 +103,8 @@ class Model():
     def get_tournament(self, s_id, t_id):
         if t_id in self.__tournament_cache:
             print("in")
-            return self.__tournament_cache[t_id]
+            self.__tournament_cache[t_id][1] = datetime.now()
+            return self.__tournament_cache[t_id][0]
 
         tournament = self.__seasons[ObjectId(s_id)].get_tournaments()[ObjectId(t_id)]
         competitions = self.__db.competitions.find({"tournament" : ObjectId(t_id)})
@@ -108,8 +123,8 @@ class Model():
 
             tournament.add_competition(c["type"], players, matches)
 
-        self.__tournament_cache[t_id] = tournament.to_json()
-        return self.__tournament_cache[t_id]
+        self.__tournament_cache[t_id] = [tournament.to_json(), datetime.now(), tournament]
+        return self.__tournament_cache[t_id][0]
 
     def player_ids_to_objects(self, ids: [ObjectId], p_tupe : str) -> dict:
         players = {}
