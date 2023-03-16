@@ -67,6 +67,21 @@ class Model():
             return 0
 
         return 2
+    
+    def add_admin(self, details):
+        #if email exists already
+        if self.__db.admins.find_one({'email': details['email']}):
+            return 1
+        else:
+            #hash password and add to dict
+            details['password_hash'] = sha256_crypt.hash(details['password'])
+            #remove unnessasary data
+            keys_list = ['confirm', 'accept_tos', 'password']  #keys to remove
+            for key in keys_list:
+                del details[key]
+            #add user into database
+            self.__db.admins.insert_one(details)
+            return 0 #success
 
     def get_seasons(self) -> dict:
         return self.__seasons

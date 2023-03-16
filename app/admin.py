@@ -1,17 +1,38 @@
-from flask import render_template, request
+from flask import render_template, request, url_for, redirect
 from app import app
 from models import model
-from forms import LoginForm
+from forms import LoginForm, RegistrationForm
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
     form = LoginForm(request.form)
     return render_template("admin.html", form=form, logged_in=model.logged_in())
 
-@app.route('/add-admin')
+@app.route('/add-admin', methods=['GET', 'POST'])
 def add_admin():
     form = LoginForm(request.form)
-    return render_template("add_admin.html", form=form, logged_in=model.logged_in())
+    reg_form = RegistrationForm(request.form)
+
+    
+
+    if request.method == 'POST' and reg_form.validate():
+        print("TEST")
+        #get dict with data for each field
+        details = reg_form.data
+
+        #match statement uses what the model returns
+        match status:= model.add_admin(details):
+            case 0:
+                print("User added")
+                return redirect(url_for('admin'))
+            case 1:
+                return "user already exists"  #how are we doing error messages? (flash?)
+            case _:
+                return status
+            
+        
+            
+    return render_template("add_admin.html", form=form, logged_in=model.logged_in(), reg_form=reg_form)
 
 @app.route('/add-matches')
 def add_matches():

@@ -2,7 +2,60 @@
 
 {% extends "base.html" %}
 {{ super()}}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/add_admin.css') }}"/>
+{% endblock %}
+
+{% block title %} Add Admin {% endblock %}
+
+
 {% block content %}
+
+<main class="main">
+
+    <h1 class="text-center text-light"> Add Admin </h1>
+
+    <div class="rankings-table-wrapper container">
+        <form action="", method="POST">
+            <div class="form-group">
+                {{ reg_form.name(class_="form-control", placeholder='Name') }}
+            </div>
+            <div class="form-group">
+                {{ reg_form.email(class_="form-control", placeholder='Email') }}
+            </div>
+            <div class="form-group">
+                {{ reg_form.password(class_="form-control", placeholder='Password') }}
+            </div>
+            <div class="form-group">
+                {{ reg_form.confirm(class_="form-control", placeholder='Confirm Password') }}
+            </div>
+                <ul>
+                    {% for error in reg_form.confirm.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            <div class="form-group">
+                <label class="form-check-label text-light">I agree to the <a href="" onclick="showTerms()">Terms and Conditions</a></label>
+                {{ reg_form.accept_tos(class_="") }}
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="form-control">
+            </div>
+            
+
+            {{ reg_form.csrf_token }} <!--protect against cross side request forgery attack-->
+        </form>
+    </div>
+</main>
+
+
+<script>
+    function showTerms() {
+      window.alert("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse blandit purus id elit venenatis vestibulum." 
+      + "Duis sed euismod enim. Aliquam erat volutpat. Curabitur iaculis convallis sem, vitae congue eros convallis malesuada.")
+    }
+    </script>
 
 
 {% endblock %}
