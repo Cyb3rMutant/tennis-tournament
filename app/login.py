@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, jsonify
+from flask import request
 from app import app
 from models import model
 from forms import LoginForm
