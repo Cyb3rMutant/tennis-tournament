@@ -58,15 +58,14 @@ class Model():
     def tournament_cache_handler(self):
         while True:
             for t in list(self.__tournament_cache):
-                if self.__tournament_cache[t][1] + timedelta(seconds= 10) < datetime.now():
+                if self.__tournament_cache[t][1] + timedelta(minutes= 30) < datetime.now():
                     continue
-                print("HEREEEEE")
 
                 self.__tournament_cache[t][2].clear()
 
                 self.__tournament_cache.pop(t)
 
-            sleep(20)
+            sleep(600)
 
     def logged_in(self,) -> bool:
         return "user" in session
