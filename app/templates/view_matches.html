@@ -5,80 +5,17 @@
      <script src="{{ url_for('static',filename='jquery/jTournament.js') }}"></script>
 {% endblock %}
 {% block content %}
+ <button onclick="myFunction()">switch type</button> 
   <div>
      <canvas id="tournament"></canvas>
   </div>
     <script>
- var matchInfo = {
-    rounds: [
-
-    {
-        name: "Round1",
-        matches: [{
-            p1: {name: "Bill"},
-            p2: {name: "Bob", score: 1},
-            winner: 1
-        }, {
-            p1: {name: "Sam"},
-            p2: {name: "Duddly"},
-            winner: 2
-        }, {
-            p1: {name: "Andy"},
-            p2: {name: "Biff"},
-            winner: 1
-        }, {
-            p1: {name: "Phill"},
-            p2: {name: "Peter"},
-            winner: 1
-        }, {
-            p1: {name: "John"},
-            p2: {name: "Dave"},
-            winner: 2
-        }, {
-            p1: {name: "Xaus"},
-            p2: {name: "James"},
-            winner: 2
-        }, {
-            p1: {name: "Kenny"},
-            p2: {name: "Nick"},
-            winner: 1
-        }, {
-            p1: {name: "Fred"},
-            p2: {name: "Pat"},
-            winner: 2
-        }]
-    }, {
-        name: "Round2",
-        matches: [{
-            p1: {name: "Bill"},
-            p2: null
-        }, {
-            p1: null,
-            p2: null
-        }, {
-            p1: null,
-            p2: null
-        }, {
-            p1: null,
-            p2: null
-        }]
-    }, {
-        name: "Round3",
-        matches: [{
-            p1: null,
-            p2: null
-        }, {
-            p1: null,
-            p2: null
-        }]
-    }, {
-        name: "Round4",
-        matches: [{
-            p1: null,
-            p2: null
-        }, ]
-    }]
-};
+        var matchInfo = [];
+        {% for c in competitions %}
+            matchInfo.push(JSON.parse('{{ c|safe }}'));
+        {% endfor %}
+        var type_index = 1;
+     console.log(matchInfo);
     var options = {
 			width: 100,
 			height: 30,
@@ -97,8 +34,13 @@
 			url: ""  // Location of canvas background image with trailing slash!.
     }
         $(document).ready(function () {
-            $('#tournament').jTournament(options, matchInfo);
+            $('#tournament').jTournament(options, matchInfo[type_index]);
         });
+
+        function myFunction(){
+            type_index = type_index ^ 1;
+            $('#tournament').jTournament(options, matchInfo[type_index]);
+        }
     </script>
 
 

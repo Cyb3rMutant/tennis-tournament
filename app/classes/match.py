@@ -9,7 +9,7 @@ class Match(object):
 
         self.__sets: dict = sets
 
-        self.__winner: Player = self.__players[sorted(self.__sets.items())[1][0]]
+        self.__winner: str= sorted(self.__sets.items(), key= lambda i: i[1])[1][0]
 
     def get_round(self) -> int:
         return self.__round

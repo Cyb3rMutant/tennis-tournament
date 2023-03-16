@@ -56,4 +56,15 @@ class Tournament(object):
 
 
     def to_json(self,):
-        pass
+        tournament = []
+
+        for c in self.__competitions:
+            competition = {"rounds": [{"name": r, "matches":[]} for r in range(1,c.get_matches()[0].get_round()+1)]}
+            print(competition)
+            for m in c.get_matches():
+                match = {"p1":{"name": m.get_players()["A"].get_name(), "score": m.get_sets()["A"]},"p2":{"name": m.get_players()["B"].get_name(), "score": m.get_sets()["B"]}, "winner": list(m.get_players().keys()).index(m.get_winner())+1}
+                print(m.get_round())
+                competition["rounds"][m.get_round()-1]["matches"].append(match)
+
+            tournament.append(competition)
+        return tournament

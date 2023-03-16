@@ -1,0 +1,89 @@
+.rankings-table-wrapper {
+    border: 2px solid #8cff00a2;
+    background-color: #0d0a149a;
+    padding: 24px;
+    overflow: hidden;
+    margin-bottom: 56px;
+    border-radius: 6px;
+
+}
+
+.player-rankings-content {
+    padding-top: 2.5%;
+}
+
+.rankings-table {
+    color: #fff;
+}
+
+thead th{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background-color: #75cc0a;
+    border: 1px solid #5fac00b9;
+}
+
+tbody td{
+    padding: 8px;
+    background-color: #0d0a149a;
+    border-top: 1px solid #3e3e3e;
+    border-bottom: 1px solid #3e3e3e;
+}
+
+.switch-buttons button {
+    padding: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+    background-color: #75cc0a;
+    border: 1px solid #6bbb09;
+    color: #fff;
+    border-radius: 3px;
+    transition-duration: 0.4s;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.switch-buttons button:hover {
+    background-color: #6bbb09;
+}
+
+.active-button {
+    background-color: #6bbb09 !important;
+}
+
+
+/*Tablet*/
+@media only screen and (min-width: 810px) {
+
+    thead th{
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        background-color: #75cc0a;
+        border: 1px solid #5fac00b9;
+        font-size: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .player-rankings-content {
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+    
+    
+}
+
+/*Desktop*/
+@media only screen and (min-width: 1080px) {
+
+    thead th{
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        font-size: 20px;
+    }
+
+}

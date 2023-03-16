@@ -2,8 +2,45 @@
 
 {% extends "base.html" %}
 {{ super()}}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/rankings.css') }}"/>
+{% endblock %}
 {% block content %}
 
-<div class="center" style="border: 3px solid green;"><h1>hi</h1></div>
+<div class="player-rankings-content">
+    <div class="switch-buttons">
+        <button class="active-button" type="button">Male</button><button type="button">Female</button>
+    </div>
+    <div class="rankings-table-wrapper">
+        <table class="rankings-table center" style="text-align: center;">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Ranking Points</th>
+                    <th>Gender</th>
+                </tr>
+                </thead>
+                <tbody>
+                {%for c, player in enumerate(players["Male"])%}
+                    <tr>
+                        {% if c == 0 %}
+                            <td style="background-color: #ffd900da; color: #0d0a14;">{{c+1}}</td>
+                        {% elif c == 1 %}
+                            <td style="background-color: #c0c0c0da;">{{c+1}}</td>
+                        {% elif c == 2 %}
+                            <td style="background-color: #CD7F32da;">{{c+1}}</td>
+                        {% else %}
+                            <td>{{c+1}}</td>
+                        {% endif %}
+                        <td>{{player.get_name()}}</td>
+                        <td>{{player.get_ranking_points()}}</td>
+                        <td>Male</td>
+                    </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}
