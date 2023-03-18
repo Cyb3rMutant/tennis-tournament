@@ -5,7 +5,7 @@ from forms import LoginForm, RegistrationForm
 
 import sys
 sys.path.append('..')
-from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX
+from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX, WrongFileExtensionError, BadFileError, UnformattedDocx
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -55,15 +55,15 @@ def endpoint1():
     files = request.files.getlist('files')
     de = DataExtractorDOCX()
     
-    match(de.get_tournament_difficulty(files)):
-        case -1:
-            return 'File is a fake docx'
-        case -2:
-            return 'File is not a docx'
-        case -3:
-            return 'File is docx but isnt formatted correctly'
-        case _:
-            return ''
+    try:
+        de.get_tournament_difficulty(files)
+        return ''
+    except BadFileError:
+        return 'File is fake docx'
+    except WrongFileExtensionError:
+        return 'File is not a docx'
+    except UnformattedDocx: 
+        return 'File contents are invalid'
 
 
 
@@ -83,19 +83,14 @@ def endpoint3():
     files = request.files.getlist('files')
     de = DataExtractorCSV()
 
-    match(de.get_tournament_prizes(files)):
-        case -1:
-            return 'File needs to have name with prize money formatted as csv'
-        
-        #Room for other cases 
-        # (Actual validating that the file has correct contents and not words)
-        
-
-        case _:
+    try:
+        if(de.get_tournament_prizes(files) == {}):
+            return 'File name MUST be "PRIZE MONEY.csv"'
+        else:
             return ''
-
-
-
+    except:
+        pass
+ 
 
 #Match data (Multiple files)
 @app.route('/endpoint4', methods=['POST'])
