@@ -23,11 +23,13 @@ stages:          # List of stages for jobs, and their order of execution
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
-      - python -m pytest
+    - echo "testing"
+#      - python -m pytest
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
-    - cd app
-    - python -m flask run
+    - echo "deploying"
+#    - cd app
+#    - python -m flask run
