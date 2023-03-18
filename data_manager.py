@@ -50,7 +50,7 @@ class DataManager:
         if(mode in self._modes):
             self._mode = mode
         else:
-            raise ModeNotFoundError(f'"{mode}" is not a valid mode.')
+            raise ModeNotFoundError(f'"{mode}" is not a valid mode, mode has to be one of the elements in {self._modes}.')
 
     def get_mode(self):
         '''
@@ -93,7 +93,6 @@ class DataExtractor(metaclass=ABCMeta):
 
     '''
 
-
     def __init__(self) -> None:
         self.dm = DataManager()
         self.dm.set_data_path(DATA_PATH)
@@ -108,7 +107,7 @@ class DataExtractor(metaclass=ABCMeta):
         if(method in self._methods):
             self._method = method
         else:
-            raise MethodNotFoundError(f'"{method}" is not a valid method.')
+            raise MethodNotFoundError(f'"{method}" is not a valid method, the method has to be one of the elements in {self._methods}.')
 
     def get_method(self):
         '''
@@ -140,17 +139,22 @@ class DataExtractorCSV(DataExtractor):
         players = {}
         for i in range(len(file_names)):
             doc = file_names[i]
-            if(re.findall("PLAYERS.csv$", doc)):
+            if(re.findall("PLAYERS*", doc)):
 
                 if(self._method.lower() == "upload"):
                     file = files[i]
                 elif(self._method.lower() == "path"):
                     file = f"{DATA_PATH}/{doc}"
 
-                df = pd.read_csv(file)
+                if(doc.endswith(".csv")):
+                    df = pd.read_csv(file)
+                else:
+                    raise WrongFileExtensionError
+                
                 player_arr = df.to_numpy().T[0]
                 key = doc.split(" ")[0].lower()
                 players[key] = np.concatenate([df.columns.values, player_arr])
+
         return players
     
     def get_tournament_prizes(self, files=[]):
@@ -163,7 +167,7 @@ class DataExtractorCSV(DataExtractor):
                 file = files[0]  
                 # check if the file name is prize money
                 if(check_filename(file.filename, "PRIZE MONEY", "csv")):
-                    return -1  
+                    return {} 
             
         if(self._method.lower() == "path"):
             file = f"{DATA_PATH}/PRIZE MONEY.csv"
@@ -244,6 +248,7 @@ class DataExtractorDOCX(DataExtractor):
         '''
         tournament_dict = {}
         file = None
+        document = None
 
         if(self._method.lower() == "upload"):
             if(files == []):
@@ -251,23 +256,21 @@ class DataExtractorDOCX(DataExtractor):
             else:
                 file = files[0]
 
+                #VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION
+                #Case 1, file is docx but type is invalid (it returns a zipfile error if it was manually created docx)
+                if file.filename.lower().endswith('docx'):
+                    try:
+                        document = Document(file)
+                    #Chuck this error if they made a docx by doing 'New file --> aaa.docx' and havent opened and edited it (idk why but its invalid)
+                    except:
+                        return -1
+                #Case 2, File doesnt end in docx
+                else:
+                    return -2
                 
         if(self._method.lower() == "path"):
             file = f"{DATA_PATH}/DEGREE OF DIFFICULTY PER TOURNAMENT.docx"
-        
-        #VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION
-        #Case 1, file is docx but type is invalid (it returns a zipfile error if it was manually created docx)
-        if file.filename.lower().endswith('docx'):
-            try:
-                document = Document(file)
-            #Chuck this error if they made a docx by doing 'New file --> aaa.docx' and havent opened and edited it (idk why but its invalid)
-            except:
-                return -1
-        #Case 2, File doesnt end in docx
-        else:
-            return -2
-
-
+            document = Document(file)
 
         # go line by line through the document
         for i in range(len(document.paragraphs)):
@@ -305,7 +308,7 @@ if(__name__ == "__main__"):
     # for p in document.paragraphs:
     #     print(p.text)
 
-    de = DataExtractorDOCX()
+    de = DataExtractorCSV()
     # de.set_method("path")
     # print(de.get_tournament_matches("tac1"))
     # import pprint 
@@ -314,28 +317,17 @@ if(__name__ == "__main__"):
     # print(de.get_tournament_matches("tac1").get("men").get("5")[0][2])
     
     files = []
-    # openFile(files, "DEGREE OF DIFFICULTY PER TOURNAMENT.docx")
-    openFile(files, "MALE PLAYERS.csv")
+    openFile(files, "RANKING POINTS.csv")
+    # openFile(files, "MALE PLAYERS.csv")
+    # openFile(files, "FEMALE PLAYERS.csv")
     # openFile(files, "TAC1 ROUND 5 MEN.csv")
     # openFile(files, "TAC1 ROUND 2 LADIES.csv")
     # openFile(files, "TAC1 ROUND 3 LADIES.csv")
     # openFile(files, "PRIZE MONEY.csv")
     
     # print(de.get_tournament_prizes(files=files))
-    try:
-        if(de.get_tournament_difficulty(files) == {}):
-            print("wrong file uploaded")
-        else:
-            print(de.get_tournament_difficulty(files))
-    except WrongFileExtensionError as we:
-        print("wrong extension")
-        print(we)
-    except FileNotFoundError as fe:
-        print(fe)
-        print("files were not inputted")
+    print(de.get_ranking_points(files))
 
-
-    
 
     
     
