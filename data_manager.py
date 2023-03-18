@@ -26,6 +26,12 @@ class MethodNotFoundError(Exception):
 class WrongFileExtensionError(Exception):
     pass
 
+class BadFileError(Exception):
+    pass
+
+class UnformattedDocx(Exception):
+    pass
+
 
 class DataManager:
     '''
@@ -257,16 +263,13 @@ class DataExtractorDOCX(DataExtractor):
                 file = files[0]
 
                 #VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION VALIDATION
-                #Case 1, file is docx but type is invalid (it returns a zipfile error if it was manually created docx)
                 if file.filename.lower().endswith('docx'):
                     try:
                         document = Document(file)
-                    #Chuck this error if they made a docx by doing 'New file --> aaa.docx' and havent opened and edited it (idk why but its invalid)
                     except:
-                        return -1
-                #Case 2, File doesnt end in docx
+                        raise BadFileError("File is a fake docx")
                 else:
-                    return -2
+                    raise WrongFileExtensionError("File is not a docx")
                 
         if(self._method.lower() == "path"):
             file = f"{DATA_PATH}/DEGREE OF DIFFICULTY PER TOURNAMENT.docx"
@@ -282,9 +285,8 @@ class DataExtractorDOCX(DataExtractor):
                 tournament_dict[tournament[0]] = tournament[1]
         
         
-        #Case 3: file is well formatted docx (has contents) but contents are invalid
         if tournament_dict == {}:
-            return -3
+            raise UnformattedDocx("File is docx but contents are invalid")
         else:
             return tournament_dict
         
