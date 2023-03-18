@@ -1,32 +1,24 @@
 
-
 {% extends "base.html" %}
 {{ super()}}
 {% block content %}
 
 <main class="main">
     <div class="container-fluid text-light" style="padding-top: 2%;">
-        <div class="row">
-            <div class="col-md-auto border offset-md-2 bg-dark">
-                <div class="mb-3 text-center">
+        <div style="width: 80%;" class="center">
+            <div class="content-wrapper">
+                <div class="mb-3">
 
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="top:0%;">
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="options" id="optionFile" autocomplete="off" checked> Upload Files
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="options" id="optionForm" autocomplete="off"> Input Form
-                        </label>
+                    <div class="btn-group btn-group-toggle">
+                        <button class="btn btn-secondary active"> Upload Files </button>
+                        <button class="btn btn-secondary"> Input Form </button>
                     </div>
                     
                     <h1 style="text-align: center;">Input Data</h1>
 
-
-
-                    
                     <form id="master-form" method="POST"  enctype="multipart/form-data">
                         
-                        <div class="form-group sp">
+                        <div>
                             
                             <label for="formFile" class="form-label"           id ="file-label-1">Input Season Data</label>
                             <div class="input-group"                            id= "file-group-1">
@@ -68,28 +60,22 @@
                             </div>
 
 
-                            
-                            <button type="submit" id = "upload" class="btn btn-primary" style="margin-top: 5%; display: none;">Upload</button>
+                            <div style="text-align: center;">
+                              <button type="submit" id = "upload" class="btn btn-primary" style="color:#000; background-color: #8cff00; margin-top: 2.5%; display: none; padding-left: 32px; padding-right: 32px; padding-top: 16px; padding-bottom: 16px; border: 0;">Upload</button>
+                          </div>
                         </div>
-                    
-                    
-                    
                     </form>
-
-
-
-
-
                 </div>
             </div>
-            <div class="col-md-3 offset-md-2 border bg-dark text-center">
-                <h1 style="color: red;", id="error_message"></h1>
+
+            <div class="content-wrapper">
+                <p style="color: red;", id="error_message"></p>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-3 offset-md-8" style="margin-top: 3%;">
-                <a href="{{ url_for('add_admin')}}" class="btn btn-primary w-100">Add New User</a>
+            <div class="col-md-3" style="margin-top: 3%; transform: translateX(150%);">
+                <a href="{{ url_for('add_admin')}}" class="btn btn-primary w-100" style="color:#000; background-color: #8cff00; border: 0;">Add New User</a>
             </div>
         </div>
     </div>

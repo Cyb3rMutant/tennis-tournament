@@ -71,12 +71,21 @@
 .center {
 	margin-left: auto;
 	margin-right: auto;
-  }
+}
 
 .switch-buttons {
 	margin: 0 auto;
 	width: fit-content;
 	padding: 2.5%;
+}
+
+.content-wrapper {
+    border: 2px solid #8cff00a2;
+    background-color: #0d0a149a;
+    padding: 24px;
+    overflow: hidden;
+    margin-bottom: 56px;
+    border-radius: 6px;
 }
 
 /*Tablet*/
