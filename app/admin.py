@@ -89,7 +89,7 @@ def endpoint3():
         else:
             return ''
     except:
-        pass
+        return 'No file selected'
  
 
 #Match data (Multiple files)
