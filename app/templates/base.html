@@ -17,17 +17,6 @@
 		<!--https://getbootstrap.com/docs/5.2/components/navbar/-->
 		<nav class="navbar navbar-expand-lg">
 			<div class="container-fluid">
-                {% if logged_in %}
-                <a href="{{ url_for('admin') }}">
-                    <button class="btn btn-outline-success login-btn" type="submit">
-                        Admin
-                    </button>
-                </a>
-                {% else %}
-                <button id="login_button" class="btn btn-outline-success login-btn" type="submit">
-                    Login
-                </button>
-                {% endif %}
 				<div class="logo">
 				<a class="navbar-brand brand horizon" href="{{ url_for('home') }}">
                     Horizon
@@ -55,6 +44,19 @@
 							<a class="nav-link" href="{{ url_for('view_player_rankings') }}">
                                 View Player Rankings
                             </a>
+						</li>
+						<li class="nav-item">
+                            {% if logged_in %}
+                            <a href="{{ url_for('admin') }}">
+                                <button class="btn btn-outline-success login-btn" type="submit">
+                                    Admin
+                                </button>
+                            </a>
+                            {% else %}
+                            <button id="login_button" class="btn btn-outline-success login-btn" type="submit">
+                                Login
+                            </button>
+                            {% endif %}
 						</li>
 					</ul>
 				</div>
