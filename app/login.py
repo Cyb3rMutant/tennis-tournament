@@ -1,4 +1,4 @@
-from flask import request
+from flask import redirect, request
 from app import app
 from models import model
 from forms import LoginForm
@@ -22,3 +22,8 @@ def login():
                 return status
 
     else: return "success"
+
+@app.route('/logout/')
+def logout():
+    model.logout()
+    return redirect(request.referrer)

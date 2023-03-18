@@ -81,6 +81,9 @@ class Model():
             return 0
 
         return 2
+
+    def logout(self):
+        session.clear()
     
     def add_admin(self, details):
         #if email exists already
