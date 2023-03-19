@@ -9,6 +9,9 @@ from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX, Wro
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+    if not model.logged_in():
+        return redirect(url_for('home'))
+
     form = LoginForm(request.form)
     return render_template("admin.html", form=form, logged_in=model.logged_in())
 
