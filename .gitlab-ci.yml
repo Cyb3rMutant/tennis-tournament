@@ -16,6 +16,14 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
+before_script:
+  - cd $CI_PROJECT_DIR
+  - source flask/bin/activate
+  - pip install --upgrade pip
+  - pip install -r requirements
+  - pip install pytest
+
+
 stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
@@ -24,12 +32,12 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "testing"
-#      - python -m pytest
+    - python -m pytest
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
     - echo "deploying"
-#    - cd app
-#    - python -m flask run
+    - cd app
+    - python -m flask run
