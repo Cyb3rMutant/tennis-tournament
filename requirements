@@ -7,3 +7,4 @@ wtforms
 python-docx
 pandas
 numpy
+pytest
