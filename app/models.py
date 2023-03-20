@@ -13,6 +13,7 @@ import threading
 from datetime import datetime, timedelta
 from time import sleep
 import jsonpickle
+# from data_manager import DataExtractorCSV, DataExtractorDOCX
 
 
 class Model():
@@ -22,7 +23,7 @@ class Model():
         client = MongoClient(cluster, tlsCAFile=ca)
         self.__db = client.TennisDB
         self.__players = {'M': Rankings(), 'F': Rankings()}
-        self.__tournament_cache: [ObjectId] = dict()
+        self.__tournament_cache: list[ObjectId] = dict()
 
         m_players = self.__db.players.find({"type": 'M'}).sort('ranking_points')
         rank = 0
@@ -129,7 +130,7 @@ class Model():
         self.__tournament_cache[t_id] = [tournament.to_json(), datetime.now(), tournament]
         return self.__tournament_cache[t_id][0]
 
-    def player_ids_to_objects(self, ids: [ObjectId], p_tupe : str) -> dict:
+    def player_ids_to_objects(self, ids: list[ObjectId], p_tupe : str) -> dict:
         players = {}
         all_players = self.__players[p_tupe]
         for p in all_players.get_positions():
@@ -140,6 +141,13 @@ class Model():
     
     def get_players(self) -> dict:
         return self.__players
+    
+
+    #methods to upload data taken from data extractor into database 
+    #eg upload_players, upload_tournaments, 
+
+    def upload_players(self, ):
+        pass
 
 
 model = Model()
