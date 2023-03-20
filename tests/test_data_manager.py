@@ -2,7 +2,7 @@ import pytest
 from werkzeug.datastructures import FileStorage
 import sys
 sys.path.append('..')
-from data_manager import DataExtractorCSV, DataExtractorDOCX, DataExtractor, WrongFileExtensionError
+from data_manager import DataExtractorCSV, DataExtractorDOCX, DataExtractor, WrongFileExtensionError, BadFileError
 import numpy as np
 
 
@@ -65,11 +65,15 @@ def test_get_tournament_difficulty(data_extractor_docx, open_file, input_filenam
     open_file(files, input_filename)
     try:
         assert data_extractor_docx.get_tournament_difficulty(files) == expected
-    except:
+    except FileNotFoundError:
         # assert that if an exception occurs its a FileNotFoundError exception
         with pytest.raises(FileNotFoundError):
             data_extractor_docx.get_tournament_difficulty(files)
             assert "" == expected
+    except BadFileError:
+        assert expected == -1
+    except WrongFileExtensionError:
+        assert expected == -2
 
 @pytest.mark.parametrize(
         ('input_filenames', 'expected'),
@@ -143,7 +147,7 @@ def test_get_tournament_prizes(data_extractor_csv, open_file, input_filename, ex
          
         ("RANKING POINTS.csv", {1: 100, 2: 50, 3: 30, 4: 30, 5: 10, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5, 11: 5, 12: 5, 13: 5, 14: 5, 15: 5, 16: 5})))
 
-def test_get_ranking_pointss(data_extractor_csv, open_file, input_filename, expected):
+def test_get_ranking_points(data_extractor_csv, open_file, input_filename, expected):
     files = []
     
     open_file(files, input_filename)
