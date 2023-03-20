@@ -31,23 +31,23 @@
 				<div class="collapse navbar-collapse" id="navbarSupportedContent" >
 					<ul class="navbar-nav ms-auto text-center">
 						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="{{ url_for('home') }}" >
+							<a class="nav-link {{ 'active' if request.path == url_for('home') }}" aria-current="page" href="{{ url_for('home') }}" >
 								Home
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('view_tournaments') }}" >
+							<a class="nav-link {{ 'active' if request.path == url_for('view_tournaments') }}" href="{{ url_for('view_tournaments') }}" >
 								View Tournaments
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('view_player_rankings') }}" >
+							<a class="nav-link {{ 'active' if request.path == url_for('view_player_rankings') }}" href="{{ url_for('view_player_rankings') }}" >
 								View Player Rankings
 							</a>
 						</li>
 						{% if logged_in %}
 						<li class="nav-item">
-							<a class="nav-link" href="{{ url_for('admin') }}">
+							<a class="nav-link {{ 'active' if request.path == url_for('admin') }}" href="{{ url_for('admin') }}">
 								Admin
 							</a>
 						</li>
