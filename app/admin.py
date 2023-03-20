@@ -85,15 +85,43 @@ def endpoint2():
 def endpoint3():
     files = request.files.getlist('files')
     de = DataExtractorCSV()
-
+    de2 = DataExtractorDOCX()
+    
     try:
-        if(de.get_tournament_prizes(files) == {}):
+        prize_money = de.get_tournament_prizes([files[0]])
+        if(prize_money == {}):
             return 'File name MUST be "PRIZE MONEY.csv"'
         else:
-            return ''
+            pass
     except:
-        return 'No file selected'
+        return 'Invalid File ??'
  
+    #Case 1
+    for key in de2.get_tournament_difficulty([files[1]]):
+
+        #TEMPORARY FIX FOR TAW11 & TBS2 & TAE21. e.g keys are as follows {'TAC1', 'TAW11 ', 'TBS2 ', 'TAE21 '}
+        if key == 'TAW11' or key =='TBS2' or key == 'TAE21':
+            key+= ' '
+
+        if key not in prize_money:
+            return f'Type1_Error: Tournament name {key} or more is missing from CSV'
+
+
+    #Case 2/3
+    for k,v in prize_money.items():
+        if len(v) != 8:
+            return 'Type2_Error: Tournament should have prize money for ONLY top 8'
+        for k2,v2 in v.items():
+            try:
+                k2 = int(k2)
+                v2 = v2.replace(",", "")
+                v2 = int(v2)
+            except:
+                return 'Type3_Error: Value in Place & Prize IS NOT an integer'
+
+
+    return ''
+
 
 #Match data (Multiple files)
 @app.route('/endpoint4', methods=['POST'])

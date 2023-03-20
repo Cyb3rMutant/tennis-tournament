@@ -96,6 +96,15 @@
       }
 
 
+      if (num == 3){
+        const fileInput1 = document.getElementById(`file-input-1`);
+        var files1 = fileInput1.files;
+        for (var i = 0; i < files1.length; i++) {
+          formData.append('files', files1[i]);
+        }
+      }
+
+
       $.ajax({
         url: `/endpoint${num}`,
         type: "POST",
