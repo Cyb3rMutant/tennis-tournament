@@ -9,8 +9,8 @@ from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX, Wro
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    if not model.logged_in():
-        return redirect(url_for('home'))
+    # if not model.logged_in():
+    #     return redirect(url_for('home'))
 
     form = LoginForm(request.form)
     return render_template("admin.html", form=form, logged_in=model.logged_in())
@@ -126,12 +126,14 @@ def endpoint3():
     except:
         return 'Invalid File ??'
  
+
+    print(prize_money)
+
     #Case 1
     for key in de2.get_tournament_difficulty([files[1]]):
-
-        #TEMPORARY FIX FOR TAW11 & TBS2 & TAE21. e.g keys are as follows {'TAC1', 'TAW11 ', 'TBS2 ', 'TAE21 '}
-        if key == 'TAW11' or key =='TBS2' or key == 'TAE21':
-            key+= ' '
+        # #TEMPORARY FIX FOR TAW11 & TBS2 & TAE21. e.g keys are as follows {'TAC1', 'TAW11 ', 'TBS2 ', 'TAE21 '}
+        # if key == 'TAW11' or key =='TBS2' or key == 'TAE21':
+        #     key+= ' '
 
         if key not in prize_money:
             return f'Tournament name {key} or more is missing from CSV'
