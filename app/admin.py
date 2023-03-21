@@ -75,8 +75,38 @@ def endpoint1():
 def endpoint2():
     print("endpoint2")
     files = request.files.getlist('files')
-    for file in files:
-        print(file.filename)
+    de = DataExtractorCSV()
+
+    players = {'male': set(), 'female': set()}
+    for f in files:
+        try:
+            data = de.get_players([f])
+            if data == {}: 
+                return 'Files are Invalid'
+            
+            #UNIQUE values for set allowed only
+            for k, v in data.items():
+                players[k].update(v)  
+                
+        except WrongFileExtensionError:
+            return 'Files are not CSV' 
+
+        except:
+            return 'Only MALE or FEMALE players'
+    
+    #Case 2 - Uneven participant number
+    if len(players['male']) != len(players['female']): #Something with Nan's sometimes randomly
+        return 'Men and women must have same number of participants! No duplicates allowed'
+
+    #Case 3 - Player name does not start with MP or FP
+    prefixes = {'male': 'MP', 'female': 'FP'}
+    for gender in prefixes:
+        for player in players[gender]:
+            if not player.startswith(prefixes[gender]):
+                return f'Invalid {gender} player name'
+
+
+    # print(players)
     return ''
 
 
@@ -104,20 +134,20 @@ def endpoint3():
             key+= ' '
 
         if key not in prize_money:
-            return f'Type1_Error: Tournament name {key} or more is missing from CSV'
+            return f'Tournament name {key} or more is missing from CSV'
 
 
     #Case 2/3
     for k,v in prize_money.items():
         if len(v) != 8:
-            return 'Type2_Error: Tournament should have prize money for ONLY top 8'
+            return 'Tournament should have prize money for ONLY top 8'
         for k2,v2 in v.items():
             try:
                 k2 = int(k2)
                 v2 = v2.replace(",", "")
                 v2 = int(v2)
             except:
-                return 'Type3_Error: Value in Place & Prize IS NOT an integer'
+                return 'Value in Place & Prize IS NOT an integer'
 
 
     return ''

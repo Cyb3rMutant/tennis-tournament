@@ -83,11 +83,13 @@
 
 
 <script>
+
+
     function uploadFiles(num) {
 
       const fileInput = document.getElementById(`file-input-${num}`);
       const button = document.getElementById(`my-button-${num}`);
-      console.log(num)
+      // console.log(num)
 
       var files = fileInput.files;
       var formData = new FormData();
@@ -96,6 +98,14 @@
       }
 
 
+      //Validating only 2 files
+      if (num == 2 && files.length != 2) {
+        document.getElementById("error_message").innerHTML = 'Only 2 files allowed';
+        return;
+      }
+
+
+      //Getting difficulty for cross validating DEGREE OF DIFFICULTY with Prize money
       if (num == 3){
         const fileInput1 = document.getElementById(`file-input-1`);
         var files1 = fileInput1.files;
