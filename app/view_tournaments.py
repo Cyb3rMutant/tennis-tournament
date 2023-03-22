@@ -24,5 +24,4 @@ def view_player_rankings():
     form = LoginForm(request.form)
     players = {}
     rankings = model.get_players()
-    players["Male"] = rankings["M"].get_positions()
-    return render_template("view_player_rankings.html", form=form, logged_in=model.logged_in(), players=players, enumerate=enumerate)
+    return render_template("view_player_rankings.html", form=form, logged_in=model.logged_in(), rankings=rankings, enumerate=enumerate)
