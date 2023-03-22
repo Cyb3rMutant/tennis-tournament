@@ -183,7 +183,7 @@ class DataExtractorCSV(DataExtractor):
         tournament = ""
         for row in df.to_numpy():
             if(not pd.isnull(row[0])):
-                tournament = row[0]
+                tournament = row[0].strip()
                 prizes[tournament] = {}
             prizes[tournament][row[1]] = row[2]
         return prizes
