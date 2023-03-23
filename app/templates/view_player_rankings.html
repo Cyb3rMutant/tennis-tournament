@@ -52,8 +52,11 @@
     {% for t in rankings.keys() %}
         types.push("{{t}}")
     {% endfor %}
+
+    document.getElementById(types[0]).style.display = "table";
+    document.getElementById("btn_".concat(types[0])).className = "active";
+
     function change_type(t) {
-        console.log(t)
         for (let i = 0; i < types.length; i++){
             document.getElementById(types[i]).style.display = "none";
             document.getElementById("btn_".concat(types[i])).className = "";

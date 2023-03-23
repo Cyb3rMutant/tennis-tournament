@@ -49,7 +49,7 @@ class Model():
                 prizes = self.__db.prizes.find_one({"_id": t["prize_id"]})
                 prizes = [Prize(p, prizes["currency"]) for p in prizes["amounts"]]
 
-                season.add_tournament(t["_id"], t["name"], t["difficulty"], t["location"], t["time"], prizes)
+                season.add_tournament(t["_id"], t["name"], t["difficulty"], prizes)
             self.__seasons[s["_id"]] = season
 
         thread = threading.Thread(target=self.tournament_cache_handler)

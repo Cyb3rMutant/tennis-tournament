@@ -1,18 +1,13 @@
 from classes.competition_factory import Competition_factory
 from classes.location import Location
-from datetime import datetime
 
 
 class Tournament(object):
-    def __init__(self, name: str, difficulty: float, location: Location, time: datetime, prizes: list) -> None:
+    def __init__(self, name: str, difficulty: float, prizes: list) -> None:
 
         self.__name = name
 
         self.__difficulty = difficulty
-
-        self.__location = location
-
-        self.__time = time
 
         self.__prizes = prizes
 
@@ -23,12 +18,6 @@ class Tournament(object):
     
     def get_difficulty(self) -> float:
         return self.__difficulty
-
-    def get_location(self) -> Location:
-        return self.__location
-
-    def get_time(self) -> datetime:
-        return self.__time
 
     def get_prizes(self) -> list:
 
