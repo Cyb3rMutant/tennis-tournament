@@ -5,17 +5,9 @@ before_script:
 
 stages:
   - test
-  - deploy
 
 unit-test-job:
   stage: test
   script:
     - echo "testing"
     - python -m pytest
-
-deploy-job:
-  stage: deploy
-  script:
-    - echo "deploying"
-    - cd app
-    - timeout 10s python -m flask run
