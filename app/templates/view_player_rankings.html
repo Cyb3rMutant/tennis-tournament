@@ -9,38 +9,62 @@
 
 <div class="player-rankings-content">
     <div class="switch-buttons">
-        <button class="active-button" type="button">Male</button><button type="button">Female</button>
+        {% for t in rankings.keys() %}
+        <button id="btn_{{ t }}" type="button" onclick="change_type('{{ t }}')">{{ t }}</button>
+        {% endfor %}
     </div>
     <div class="content-wrapper">
-        <table class="rankings-table center" style="text-align: center;">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th>Ranking Points</th>
-                    <th>Gender</th>
-                </tr>
-                </thead>
-                <tbody>
-                {%for c, player in enumerate(players["Male"])%}
+        {% for type, players in rankings.items() %}
+        <table id="{{ type }}" class="rankings-table center" style="text-align: center; display: none;">
+                <thead>
                     <tr>
-                        {% if c == 0 %}
-                            <td style="background-color: #ffd900da; color: #0d0a14;">{{c+1}}</td>
-                        {% elif c == 1 %}
-                            <td style="background-color: #c0c0c0da;">{{c+1}}</td>
-                        {% elif c == 2 %}
-                            <td style="background-color: #CD7F32da;">{{c+1}}</td>
-                        {% else %}
-                            <td>{{c+1}}</td>
-                        {% endif %}
-                        <td>{{player.get_name()}}</td>
-                        <td>{{player.get_ranking_points()}}</td>
-                        <td>Male</td>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Ranking Points</th>
+                        <th>Gender</th>
                     </tr>
-                {%endfor%}
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                    {% for c, player in enumerate(players.get_positions()) %}
+                        <tr>
+                            {% if c == 0 %}
+                                <td style="background-color: #ffd900da; color: #0d0a14;">{{c+1}}</td>
+                            {% elif c == 1 %}
+                                <td style="background-color: #c0c0c0da;">{{c+1}}</td>
+                            {% elif c == 2 %}
+                                <td style="background-color: #CD7F32da;">{{c+1}}</td>
+                            {% else %}
+                                <td>{{c+1}}</td>
+                            {% endif %}
+                            <td>{{ player.get_name() }}</td>
+                            <td>{{ player.get_ranking_points() }}</td>
+                            <td>{{ type }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
     </div>
 </div>
+
+<script>
+    var types = [];
+    {% for t in rankings.keys() %}
+        types.push("{{t}}")
+    {% endfor %}
+
+    document.getElementById(types[0]).style.display = "table";
+    document.getElementById("btn_".concat(types[0])).className = "active";
+
+    function change_type(t) {
+        for (let i = 0; i < types.length; i++){
+            document.getElementById(types[i]).style.display = "none";
+            document.getElementById("btn_".concat(types[i])).className = "";
+        }
+
+        document.getElementById(t).style.display = "table";
+        document.getElementById("btn_".concat(t)).className = "active";
+    }
+</script>
 
 {% endblock %}

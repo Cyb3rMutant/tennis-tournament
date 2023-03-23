@@ -12,5 +12,5 @@ class Season(object):
     def get_tournaments(self) -> dict:
         return self.__tournaments
 
-    def add_tournament(self, id, name, difficulty, location, time, prizes) -> None:
-        self.__tournaments[id] = Tournament(name, difficulty, location, time, prizes)
+    def add_tournament(self, id, name, difficulty, prizes) -> None:
+        self.__tournaments[id] = Tournament(name, difficulty, prizes)
