@@ -158,6 +158,11 @@ def endpoint3():
     return ''
 
 
+import os
+
+
+
+
 #Match data (Multiple files)
 @app.route('/endpoint4', methods=['POST'])
 def endpoint4():
@@ -167,37 +172,119 @@ def endpoint4():
     de = DataExtractorCSV()
     de2 = DataExtractorDOCX()
 
-    print(files)
 
-    #Preprocessing, Getting players & Difficulty which will be used for validation.
+    #PREPROCESSING PREPROCESSING PREPROCESSING
+    #Getting players & Difficulty which will be used for validation.
     tournament_difficulty = de2.get_tournament_difficulty([files[0]])
-    players = {'male': set(), 'female': set()}
-    for i in range (2):
-        data = de.get_players([files[i+1]])
-        for k, v in data.items():
-            players[k].update(v)
-    length_of_players = len(players['male']) #32
 
-    #5
+    players = {'male': set(), 'female': set()} #We dont use this (Only length matters)
+    for i in range (2): #We dont use this
+        data = de.get_players([files[i+1]]) #We dont use this
+        for k, v in data.items(): #We dont use this
+            players[k].update(v) #We dont use this
+
+
+    length_of_players = len(players['male']) #32 - Only this matters
+
+    #nubmer_of_rounds = 5
     number_of_rounds = math.log2(length_of_players) #This is  number 5, because 5 rounds
     number_of_rounds = round(number_of_rounds)
 
 
+    #Number of files allowed to be uploaded = 40. 5 rounds * 2 = for 1 tournament then * 4 for each tournament
+    number_of_files_allowed = (number_of_rounds * 2) * len(tournament_difficulty)
 
-    # print(tournament_difficulty)
-    # print(players)
 
-    #Case 1 Validate file names:
+
+    #VALIDATION #VALIDATION #VALIDATION #VALIDATION #VALIDATION #VALIDATION
+
+    #Case 1 validate file upload number:
+    if len(files[3:]) != number_of_files_allowed:
+        return f'Number of files uploaded should be {number_of_files_allowed} not {len(files[3:])}'
+
+
+
+    #Case 2 validate file names:
+    file_count = {}
+    def validate_filename(filename):
+        basename = os.path.basename(filename)
+        name_only = os.path.splitext(basename)[0] 
+        splitted_filename = name_only.split() 
+
+        try:
+            tournament_name, round_txt, round_number, gender = splitted_filename
+        except:
+            return 'File name should have four parts separated by spaces.'
+
+
+        if tournament_name not in tournament_difficulty:
+            return f'Invalid tournament code {tournament_name}.'
+        if gender not in ['LADIES', 'MEN']:
+            return f'Invalid gender {gender} should be LADIES or MEN.'
+        if round_txt != 'ROUND':
+            return f"Second word has to be 'ROUND' not {round_txt}."
+        try:
+            round_number = int(round_number)
+            if round_number < 1 or round_number > number_of_rounds:
+                return f'Round number should be between 1 and {number_of_rounds}.'
+        except:
+            return f'Round number should be an integer between 1 and {number_of_rounds}.'
+        
+        if filename in file_count:
+            return f'Duplicate file name found {filename}'
+        
+        file_count[filename] = 1
+
+
+
+        return None
+
+
+    errors = []
     for f in files[3:]:
-        print (f.filename)
-
-
-
-    #Case 2 Validate file lengths:
+        error = validate_filename(f.filename)
+        if error:
+            errors.append(f'Invalid file name {f.filename}: {error}')
     
 
+    #Case 3: Check for N round length  & Check if number of rounds is okay
+    
+    #Get a count of all the labels
+    round_counts = {}
+    for f in files[3:]:
+        basename = os.path.basename(f.filename)
+        name_only = os.path.splitext(basename)[0] 
+        splitted_filename = name_only.split()
+        
+        try:
+            tournament_name, round_txt, round_number, gender = splitted_filename
+        except:
+            return 'File name should have four parts separated by spaces.'
+        
 
-    #Case 3 Validate file contents (big one):
+        if tournament_name not in round_counts:
+            round_counts[tournament_name] = {'LADIES': 0, 'MEN': 0}
+
+        round_counts[tournament_name][gender] += 1
+
+
+    # print(round_counts)
+    #Case 3.5 Check if number of rounds in each tournament is equal to correct number of rounds
+    for tournament_name in round_counts:
+        if round_counts[tournament_name]['LADIES'] != number_of_rounds or round_counts[tournament_name]['MEN'] != number_of_rounds:
+            errors.append(f'Tournament {tournament_name} should have {number_of_rounds} rounds for both men and women.')
+    
+
+   
+    #Return list of errors for files
+    if errors:
+        return errors
+
+
+    #File name/upload validation over. 
+
+    #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION 
+
 
 
 
@@ -205,7 +292,6 @@ def endpoint4():
     #One player must have no more or less than 3 score for a win
     #One player must have no more or less than 2 score for a win
         
-    #Case 1, Validate file names & lengths
 
 
 
