@@ -15,8 +15,7 @@ unit-test-job:
 
 deploy-job:
   stage: deploy
-  environment: production
   script:
     - echo "deploying"
     - cd app
-    - timeout 2m python -m flask run
+    - timeout 10s python -m flask run
