@@ -93,6 +93,25 @@
 
       var files = fileInput.files;
       var formData = new FormData();
+
+
+      //Getting difficulty for cross validating DEGREE OF DIFFICULTY with Prize money
+      if (num == 4){
+        const fileInput1 = document.getElementById(`file-input-1`);
+        var files1 = fileInput1.files;
+        for (var i = 0; i < files1.length; i++) {
+          formData.append('files', files1[i]);
+        }
+
+        const fileInput2 = document.getElementById(`file-input-2`);
+        var files2 = fileInput2.files;
+        for (var i = 0; i < files2.length; i++) {
+          formData.append('files', files2[i]);
+        }
+
+      }      
+
+
       for (var i = 0; i < files.length; i++) {
         formData.append('files', files[i]);
       }

@@ -2,7 +2,7 @@ from flask import render_template, request, url_for, redirect
 from app import app
 from models import model
 from forms import LoginForm, RegistrationForm
-
+import math
 import sys
 sys.path.append('..')
 from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX, WrongFileExtensionError, BadFileError, UnformattedDocx
@@ -98,6 +98,12 @@ def endpoint2():
     if len(players['male']) != len(players['female']): #Something with Nan's sometimes randomly
         return 'Men and women must have same number of participants! No duplicates allowed'
 
+
+
+    if math.log2(len(players)).is_integer() == False:
+        return 'Player count must be a power of 2. (e.g. 16,32,64)'
+
+
     #Case 3 - Player name does not start with MP or FP
     prefixes = {'male': 'MP', 'female': 'FP'}
     for gender in prefixes:
@@ -131,9 +137,6 @@ def endpoint3():
 
     #Case 1
     for key in de2.get_tournament_difficulty([files[1]]):
-        # #TEMPORARY FIX FOR TAW11 & TBS2 & TAE21. e.g keys are as follows {'TAC1', 'TAW11 ', 'TBS2 ', 'TAE21 '}
-        # if key == 'TAW11' or key =='TBS2' or key == 'TAE21':
-        #     key+= ' '
 
         if key not in prize_money:
             return f'Tournament name {key} or more is missing from CSV'
@@ -160,10 +163,54 @@ def endpoint3():
 def endpoint4():
     print("endpoint4")
     files = request.files.getlist('files')
-    for file in files:
-        print(file.filename)
-    # print(files)
+
+    de = DataExtractorCSV()
+    de2 = DataExtractorDOCX()
+
+    print(files)
+
+    #Preprocessing, Getting players & Difficulty which will be used for validation.
+    tournament_difficulty = de2.get_tournament_difficulty([files[0]])
+    players = {'male': set(), 'female': set()}
+    for i in range (2):
+        data = de.get_players([files[i+1]])
+        for k, v in data.items():
+            players[k].update(v)
+    length_of_players = len(players['male']) #32
+
+    #5
+    number_of_rounds = math.log2(length_of_players) #This is  number 5, because 5 rounds
+    number_of_rounds = round(number_of_rounds)
+
+
+
+    # print(tournament_difficulty)
+    # print(players)
+
+    #Case 1 Validate file names:
+    for f in files[3:]:
+        print (f.filename)
+
+
+
+    #Case 2 Validate file lengths:
+    
+
+
+    #Case 3 Validate file contents (big one):
+
+
+
+
+    #One player must have no more or less than 3 score for a win
+    #One player must have no more or less than 2 score for a win
+        
+    #Case 1, Validate file names & lengths
+
+
+
     return ''
+
 
 
 @app.route('/submit-form', methods=['POST'])
