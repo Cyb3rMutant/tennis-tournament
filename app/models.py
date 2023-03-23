@@ -13,8 +13,9 @@ import threading
 from datetime import datetime, timedelta
 from time import sleep
 import jsonpickle
-# from data_manager import DataExtractorCSV, DataExtractorDOCX
-
+import sys
+sys.path.append('..')
+from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX, WrongFileExtensionError, BadFileError, UnformattedDocx
 
 class Model():
     def __init__(self):
@@ -143,11 +144,102 @@ class Model():
         return self.__players
     
 
-    #methods to upload data taken from data extractor into database 
-    #eg upload_players, upload_tournaments, 
+    #process is - data input into form, validated, uploaded, given to my function is 2d array containing file objects 
+    #where is my upload players function called
 
-    def upload_players(self, ):
-        pass
+    #data is passed to the function in a 2d array
+    #essentially we dont know how many columns in each row (dont know how many files for each)
+    # [degreeofdifficuly][][][]
+    # [players][players][players]
+    # [prizedata][prizedata]
+
+    #then take 2d array of files and pass each one through data extractor then into the db
+    #data extractor should give them in dict (need to check format)
+
+    #upload validated file data into the database
+    def upload_data(self, files):
+        de_csv = DataExtractorCSV()
+        de_doc = DataExtractorDOCX()
+
+
+
+        #get player data
+        players_dict = de_csv.get_players(files[1])  #players stored as array under key for their gender
+        for key in players_dict: 
+            if key == 'data/male':    #more extenable way of doing this?
+                for player in players_dict[key]:
+                    self.__db.players.insert_one({'name':player, 'ranking_points':0, 'type':"M"})
+            elif key == 'data/female':    
+                for player in players_dict[key]:
+                    self.__db.players.insert_one({'name':player, 'ranking_points':0, 'type':"F"})
+        
+
+
+        #get prize data 
+        prize_dict = de_csv.get_tournament_prizes(files[2])
+        for tournament in prize_dict:
+            prize_money = []
+            for number in tournament:
+                prize_money.append(tournament[number])   #append amount
+            #write to db
+            self.__db.prizes.insert_one({'amounts': prize_money, 'currency': "$"})
+
+
+
+        
+        #process docx file
+        tournament_dict = {}  
+        #returns {'TAC1': '2.7', 'TAE21': '2.3', 'TAW11': '3.1', 'TBS2': '3.25'}
+        tournament_dict = de_doc.get_tournament_difficulty(files[0])
+            
+        #need the format of {'name': 'TAC1', 'difficulty': '2.7', 'prize_id': 'objectid('ahaha)'}
+        #prize money files says which tournament has which prize money
+        #store each correct formatted dict in a list
+        formatted_tournaments = []
+        for tournament in tournament_dict:
+            prize_info = self.__db.prizes.find_one({'name':tournament})  #dict
+            prize_id = prize_info['_id']
+            formatted_tournaments.append({'name':tournament, 'difficulty':tournament_dict[tournament], 'prize_id':prize_id})
+
+        self.__db.tournaments.insert_many(formatted_tournaments)
+
+
+
+
+        #need format of {competiton id: objectid(ahaaha), round:1, players: {A: objectid(jaja), B: objectid(lalal)}, sets: {A: 2, B: 3}}
+
+        for tournament in tournament_dict:   #eg TAC1
+            matches_dict = de_csv.get_tournament_matches(tournament, files[3])
+            for competition, matches_info in matches_dict.items():   #eg ladies
+                competition_round_matches = []     #list of dictionaries of all the matches to be insert for a specific competition and round
+                #get tournament id
+                tournament_id = self.__db.tournaments.find_one({'name': tournament})['_id']
+                #get competition id
+                competition_type = "M"  #default
+                if competition == 'ladies':
+                    competition_type = "F"
+                competition_id = self.__db.competitions.find_one({'tournament': tournament_id, 'type': competition_type})['_id']
+
+                for comp_round in matches_info:
+                    matches_array = matches_info[comp_round]
+                    for match in matches_array:  #row
+                        player_A = match[0]
+                        player_A_sets = match[1]
+
+                        player_B = match[2]
+                        player_B_sets = match[3]
+
+                        #get player ids
+                        player_A_id = self.__db.players.find_one({'name': player_A})['_id']
+                        player_B_id = self.__db.players.find_one({'name': player_B})['_id']
+
+                        #add to list
+                        competition_round_matches.append({'competition_id': competition_id, 'round': comp_round, 'players' : {'A': player_A_id, 'B': player_B_id}, 'sets': {'A': player_A_sets, 'B': player_B_sets}})
+
+                #insert all the matches for that competition and round into the db
+                self.__db.matches.insert_many(competition_round_matches)
+
+        
 
 
 model = Model()
