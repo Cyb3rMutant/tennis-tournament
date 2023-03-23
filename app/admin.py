@@ -3,6 +3,7 @@ from app import app
 from models import model
 from forms import LoginForm, RegistrationForm
 import math
+import os
 import sys
 sys.path.append('..')
 from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX, WrongFileExtensionError, BadFileError, UnformattedDocx
@@ -158,7 +159,6 @@ def endpoint3():
     return ''
 
 
-import os
 
 
 
@@ -177,11 +177,11 @@ def endpoint4():
     #Getting players & Difficulty which will be used for validation.
     tournament_difficulty = de2.get_tournament_difficulty([files[0]])
 
-    players = {'male': set(), 'female': set()} #We dont use this (Only length matters)
-    for i in range (2): #We dont use this
-        data = de.get_players([files[i+1]]) #We dont use this
-        for k, v in data.items(): #We dont use this
-            players[k].update(v) #We dont use this
+    players = {'male': set(), 'female': set()} 
+    for i in range (2): 
+        data = de.get_players([files[i+1]]) 
+        for k, v in data.items(): 
+            players[k].update(v) 
 
 
     length_of_players = len(players['male']) #32 - Only this matters
@@ -204,7 +204,7 @@ def endpoint4():
 
 
 
-    #Case 2 validate file names:
+    #Case 2 validate file names format & check for duplicates:
     file_count = {}
     def validate_filename(filename):
         basename = os.path.basename(filename)
@@ -214,13 +214,13 @@ def endpoint4():
         try:
             tournament_name, round_txt, round_number, gender = splitted_filename
         except:
-            return 'File name should have four parts separated by spaces.'
+            return 'File name should be formatted in `TNAME "ROUND" RNUM GENDER`.'
 
 
         if tournament_name not in tournament_difficulty:
-            return f'Invalid tournament code {tournament_name}.'
+            return f'Invalid tournament name {tournament_name}.'
         if gender not in ['LADIES', 'MEN']:
-            return f'Invalid gender {gender} should be LADIES or MEN.'
+            return f'Invalid gender {gender} should be either LADIES or MEN.'
         if round_txt != 'ROUND':
             return f"Second word has to be 'ROUND' not {round_txt}."
         try:
@@ -249,7 +249,7 @@ def endpoint4():
 
     #Case 3: Check for N round length  & Check if number of rounds is okay
     
-    #Get a count of all the labels
+    #round_counts = {'TAE1': {'LADIES':5, 'MEN':5}}...
     round_counts = {}
     for f in files[3:]:
         basename = os.path.basename(f.filename)
@@ -259,7 +259,7 @@ def endpoint4():
         try:
             tournament_name, round_txt, round_number, gender = splitted_filename
         except:
-            return 'File name should have four parts separated by spaces.'
+            return "File name should be formatted in `TNAME 'ROUND' RNUM GENDER` e.g. (TAE11 ROUND 1 MALE)."
         
 
         if tournament_name not in round_counts:
@@ -268,8 +268,9 @@ def endpoint4():
         round_counts[tournament_name][gender] += 1
 
 
-    # print(round_counts)
+
     #Case 3.5 Check if number of rounds in each tournament is equal to correct number of rounds
+    #Validates that the number of rounds in each tournament is valid
     for tournament_name in round_counts:
         if round_counts[tournament_name]['LADIES'] != number_of_rounds or round_counts[tournament_name]['MEN'] != number_of_rounds:
             errors.append(f'Tournament {tournament_name} should have {number_of_rounds} rounds for both men and women.')
@@ -284,18 +285,59 @@ def endpoint4():
     #File name/upload validation over. 
 
     #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION 
+    errors2 = []
+
+    for tournament_name in tournament_difficulty:
+        tournament_files = [f for f in files if f.filename.startswith(tournament_name)]
+        tournament_matches = de.get_tournament_matches(tournament_name, tournament_files)
+
+
+        for gender in ['ladies', 'men']:
+            for round_num in tournament_matches[gender]:
+                if gender == 'men': 
+                    max_score = 3
+                    temp_gender = 'male'
+
+                else: 
+                    max_score= 2
+                    temp_gender = 'female'
+
+
+                round_matches = tournament_matches[gender][round_num]
+                round_players = set() #used for finding duplicate
+                for match in round_matches:
+                    try:
+                        if max_score not in list(match[1::2]) or match[1] == match[3] or any(score > max_score or score < 0 for score in match[1::2]): 
+                            errors2.append(f"Invalid score in {gender} match {match} in round {round_num} in {tournament_name}")
+                    except: #Goes here when it tries todo score comparison if its not an int.
+                        errors2.append(f"Invalid score in {gender} match {match} in round {round_num} in {tournament_name}. Score is not formatted correctly")
+
+                    p1 = match[0]
+                    p2 = match[2]
+                    #Player doesnt exist
+                    if p1 not in players[temp_gender] or p2 not in players[temp_gender]:
+                        errors2.append(f"Invalid player name in {gender}'s match {match} in round {round_num} in {tournament_name}")
+    
+
+                    #Duplicate
+                    if p1 in round_players or p2 in round_players:
+                        errors2.append(f"Duplicate player name in {gender}'s match {match} in round {round_num} in {tournament_name}")
+                    else:
+                        round_players.add(p1)
+                        round_players.add(p2)
+
+
+    print(players)
 
 
 
+    if errors2:
+        return errors2
+    else:
+        return ''
 
 
-    #One player must have no more or less than 3 score for a win
-    #One player must have no more or less than 2 score for a win
         
-
-
-
-    return ''
 
 
 
@@ -305,9 +347,8 @@ def submit_form():
     print("Submit formmmmmmm")
 
     files = request.files.getlist('files')
-    for file in files:
-        print(file.filename)
-    # print(files)
 
+    new_files = [[files[0]], [files[1], files[2]], [files[3]], [files[4:]]]
+    print(new_files)
     return ''
 
