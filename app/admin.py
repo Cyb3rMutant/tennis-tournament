@@ -101,8 +101,8 @@ def endpoint2():
 
 
 
-    if math.log2(len(players)).is_integer() == False:
-        return 'Player count must be a power of 2. (e.g. 16,32,64)'
+    if math.log2(len(players['male'])).is_integer() == False:
+        return 'Player count must be a power of 2. (e.g. 16,32,64...)'
 
 
     #Case 3 - Player name does not start with MP or FP
