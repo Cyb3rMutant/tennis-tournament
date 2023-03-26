@@ -17,7 +17,7 @@
     <h1 class="text-center text-light"> Add Admin </h1>
 
     <div class="content-wrapper container">
-        <form action="", method="POST">
+        <form action="/add-admin", method="POST" id="add-admin-form">
             <div class="form-group">
                 {{ reg_form.name(class_="form-control", placeholder='Name') }}
             </div>
@@ -44,8 +44,8 @@
             </div>
             
 
-            {{ reg_form.csrf_token }} <!--protect against cross side request forgery attack-->
         </form>
+        <h1 style="color:red;" id="message"><h1>
     </div>
 </main>
 
@@ -55,7 +55,24 @@
       window.alert("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse blandit purus id elit venenatis vestibulum." 
       + "Duis sed euismod enim. Aliquam erat volutpat. Curabitur iaculis convallis sem, vitae congue eros convallis malesuada.")
     }
-    </script>
+
+
+    $(document).ready(function () {
+        $("#add-admin-form").submit(function (e) {
+            var url = "{{ url_for('add_admin') }}"; // send the form data here.
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $("#add-admin-form").serialize(), // serializes the form's elements.
+                success: function (data) {
+                    if (data === "success") window.location.replace("{{url_for('admin')}}");
+                    document.getElementById("message").innerHTML = data;
+                },
+            });
+            e.preventDefault(); // block the traditional submission of the form.
+        });
+    });
+</script>
 
 
 {% endblock %}

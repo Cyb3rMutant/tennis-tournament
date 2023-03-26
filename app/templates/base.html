@@ -112,8 +112,7 @@
 						data: $("#login-form").serialize(), // serializes the form's elements.
 						success: function (data) {
 							if (data === "success") location.reload();
-							document.getElementById("login_message").innerHTML =
-								data;
+							document.getElementById("login_message").innerHTML = data;
 						},
 					});
 					e.preventDefault(); // block the traditional submission of the form.
