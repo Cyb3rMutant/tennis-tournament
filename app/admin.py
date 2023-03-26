@@ -312,7 +312,7 @@ def endpoint4():
                 round_players = set() #used for finding duplicate
 
                 if len(round_matches) != expected_matches:
-                    return [f"Invalid match count in {gender} match {match} in round {round_num} in {tournament_name}"]
+                    return [f"Invalid number of matches  in {gender}  round {round_num} in {tournament_name}"]
                 expected_matches = expected_matches // 2
 
                 for match in round_matches:
