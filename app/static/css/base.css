@@ -159,6 +159,22 @@
 	background-color: #81eb00;
 }
 
+.switch-button {
+    padding: 16px;
+	margin: 16px;
+    background-color: #75cc0a;
+    border: 1px solid #6bbb09;
+    color: #000;
+    border-radius: 3px;
+    transition-duration: 0.4s;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.switch-button:hover {
+    background-color: #6bbb09;
+}
+
+
 /*Tablet*/
 @media only screen and (min-width: 992px) {
 

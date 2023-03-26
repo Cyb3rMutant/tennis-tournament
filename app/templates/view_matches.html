@@ -5,10 +5,17 @@
      <script src="{{ url_for('static',filename='jquery/jTournament.js') }}"></script>
 {% endblock %}
 {% block content %}
- <button onclick="myFunction()">switch type</button> 
-  <div>
-     <canvas id="tournament"></canvas>
-  </div>
+<div style="text-align:center;">
+    <button onclick="myFunction()" class="switch-button">Switch Gender</button> 
+</div>
+<div style="display: flex;">
+    <div class="content-wrapper" style="overflow: auto; max-width: 100%; width: fit-content; padding-right: 1000px;">
+        <canvas id="tournament"></canvas>
+    </div>
+    <div class="content-wrapper" style="width: 50%; margin-left: 1%; color: #fefefe">
+        hi
+    </div>
+</div>
     <script>
         var matchInfo = [];
         {% for c in competitions %}
@@ -17,20 +24,19 @@
         var type_index = 1;
      console.log(matchInfo);
     var options = {
-			width: 100,
+			width: 175,
 			height: 30,
 			border_width: "1",
-			background_color: "#c0c0c0",
-			text_style: "bold 15px verdana",
+            border_color: "#fff",
+			background_color: "#0d0a14df",
+			text_style: "bold 15px sans-serif",
 			h_spacing: 10,
 			v_spacing: 10,
-			text_color: "#FFFFFF",
+			text_color: "#fefefe",
 			text_color_loss: "#777777",
-			gradient: [{loc: 0, color: '#4F4F4F'},
-			   {loc: 0.5, color: '#1B1B1B'},
-			   {loc: 0.5, color: '#000000'}],
 			score: {active: true},
 			links: {active: true},
+            bracket_color: "#999999",
 			url: ""  // Location of canvas background image with trailing slash!.
     }
         $(document).ready(function () {

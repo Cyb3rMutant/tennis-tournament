@@ -17,9 +17,10 @@ tournaments
 <main class="main">
 
     <div class="container">
-        <div class="row gy-3" style="padding-top: 13%;">
+        <div class="row gy-3" style="padding-top: 13%; text-align:center;">
             {% for sid, season in seasons.items() %}
             <h1 style="color: white;">{{ season.get_name() }}</h1>
+            <hr style="border: 1px solid #fefefe;"/>
                 {% for tid, tournament in season.get_tournaments().items() %}
                     <div class="col-12 col-lg-4 col-xl-3">
                         <div class="card">

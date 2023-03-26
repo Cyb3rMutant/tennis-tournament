@@ -1,8 +1,6 @@
 (function ($) {
 
  $.fn.jTournament = function (settings, data) {
-		this.before ("<div style=\"position:relative; width: 100%; height: 100%;\">");
-		this.after ("</div>");
 		//Default Options
 		var ds = {
 			width: 40,
