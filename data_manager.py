@@ -231,7 +231,7 @@ class DataExtractorCSV(DataExtractor):
             if(re.findall(f"{tournament} ROUND [0-9]+ *", doc.upper())):
                 if(self._method.lower() == "upload"):
                     file = files[i]
-                    print(file)
+                    # print(file)
                 elif(self._method.lower() == "path"):
                     file = f"{DATA_PATH}/{doc}"
                 df = pd.read_csv(file)

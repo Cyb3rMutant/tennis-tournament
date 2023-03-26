@@ -7,12 +7,19 @@ from app import app
 from models import model
 from forms import LoginForm, RegistrationForm
 import math
+<<<<<<< HEAD
 
+=======
+import os
+import sys
+sys.path.append('..')
+from data_manager import DataExtractor, DataExtractorCSV, DataExtractorDOCX, WrongFileExtensionError, BadFileError, UnformattedDocx
+>>>>>>> refs/remotes/origin/main
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    # if not model.logged_in():
-    #     return redirect(url_for('home'))
+    if not model.logged_in():
+        return redirect(url_for('home'))
 
     form = LoginForm(request.form)
     return render_template("admin.html", form=form, logged_in=model.logged_in())
@@ -69,11 +76,17 @@ def endpoint1():
         de.get_tournament_difficulty(files)
         return ''
     except BadFileError:
-        return 'File is fake docx'
+        return ['File is fake docx']
     except WrongFileExtensionError:
+<<<<<<< HEAD
         return 'File is not a docx'
     except UnformattedDocx:
         return 'File contents are invalid'
+=======
+        return ['File is not a docx']
+    except UnformattedDocx: 
+        return ['File contents are invalid']
+>>>>>>> refs/remotes/origin/main
 
 
 # Players (Multiple files)
@@ -87,14 +100,22 @@ def endpoint2():
     for f in files:
         try:
             data = de.get_players([f])
+<<<<<<< HEAD
             if data == {}:
                 return 'Files are Invalid'
 
             # UNIQUE values for set allowed only
+=======
+            if data == {}: 
+                return ['Files are Invalid']
+            
+            #UNIQUE values for set allowed only
+>>>>>>> refs/remotes/origin/main
             for k, v in data.items():
                 players[k].update(v)
 
         except WrongFileExtensionError:
+<<<<<<< HEAD
             return 'Files are not CSV'
 
         except:
@@ -107,13 +128,28 @@ def endpoint2():
 
     if math.log2(len(players)).is_integer() == False:
         return 'Player count must be a power of 2. (e.g. 16,32,64)'
+=======
+            return ['Files are not CSV']
+
+        except:
+            return ['Only MALE or FEMALE players']
+    
+    #Case 2 - Uneven participant number
+    if len(players['male']) != len(players['female']): #Something with Nan's sometimes randomly
+        return ['Men and women must have same number of participants! No duplicates allowed']
+
+
+
+    if math.log2(len(players['male'])).is_integer() == False:
+        return ['Player count must be a power of 2. (e.g. 16,32,64...)']
+>>>>>>> refs/remotes/origin/main
 
     # Case 3 - Player name does not start with MP or FP
     prefixes = {'male': 'MP', 'female': 'FP'}
     for gender in prefixes:
         for player in players[gender]:
             if not player.startswith(prefixes[gender]):
-                return f'Invalid {gender} player name'
+                return [f'Invalid {gender} player name']
 
     # print(players)
     return ''
@@ -128,12 +164,22 @@ def endpoint3():
 
     try:
         prize_money = de.get_tournament_prizes([files[0]])
+<<<<<<< HEAD
         if (prize_money == {}):
             return 'File name MUST be "PRIZE MONEY.csv"'
         else:
             pass
     except:
         return 'Invalid File ??'
+=======
+        if(prize_money == {}):
+            return ['File name MUST be "PRIZE MONEY.csv"']
+        else:
+            pass
+    except:
+        return ['Invalid File ??']
+ 
+>>>>>>> refs/remotes/origin/main
 
     print(prize_money)
 
@@ -141,24 +187,37 @@ def endpoint3():
     for key in de2.get_tournament_difficulty([files[1]]):
 
         if key not in prize_money:
-            return f'Tournament name {key} or more is missing from CSV'
+            return [f'Tournament name {key} or more is missing from CSV']
 
     # Case 2/3
     for k, v in prize_money.items():
         if len(v) != 8:
+<<<<<<< HEAD
             return 'Tournament should have prize money for ONLY top 8'
         for k2, v2 in v.items():
+=======
+            return ['Tournament should have prize money for ONLY top 8']
+        for k2,v2 in v.items():
+>>>>>>> refs/remotes/origin/main
             try:
                 k2 = int(k2)
                 v2 = v2.replace(",", "")
                 v2 = int(v2)
             except:
-                return 'Value in Place & Prize IS NOT an integer'
+                return ['Value in Place & Prize IS NOT an integer']
 
     return ''
 
 
+<<<<<<< HEAD
 # Match data (Multiple files)
+=======
+
+
+
+
+#Match data (Multiple files)
+>>>>>>> refs/remotes/origin/main
 @app.route('/endpoint4', methods=['POST'])
 def endpoint4():
     print("endpoint4")
@@ -171,12 +230,20 @@ def endpoint4():
     # Getting players & Difficulty which will be used for validation.
     tournament_difficulty = de2.get_tournament_difficulty([files[0]])
 
+<<<<<<< HEAD
     # We dont use this (Only length matters)
     players = {'male': set(), 'female': set()}
     for i in range(2):  # We dont use this
         data = de.get_players([files[i+1]])  # We dont use this
         for k, v in data.items():  # We dont use this
             players[k].update(v)  # We dont use this
+=======
+    players = {'male': set(), 'female': set()} 
+    for i in range (2): 
+        data = de.get_players([files[i+1]]) 
+        for k, v in data.items(): 
+            players[k].update(v) 
+>>>>>>> refs/remotes/origin/main
 
     length_of_players = len(players['male'])  # 32 - Only this matters
 
@@ -193,9 +260,15 @@ def endpoint4():
 
     # Case 1 validate file upload number:
     if len(files[3:]) != number_of_files_allowed:
-        return f'Number of files uploaded should be {number_of_files_allowed} not {len(files[3:])}'
+        return [f'Number of files uploaded should be {number_of_files_allowed} not {len(files[3:])}']
 
+<<<<<<< HEAD
     # Case 2 validate file names:
+=======
+
+
+    #Case 2 validate file names format & check for duplicates:
+>>>>>>> refs/remotes/origin/main
     file_count = {}
 
     def validate_filename(filename):
@@ -206,24 +279,32 @@ def endpoint4():
         try:
             tournament_name, round_txt, round_number, gender = splitted_filename
         except:
-            return 'File name should have four parts separated by spaces.'
+            return ['File name should be formatted in `TNAME "ROUND" RNUM GENDER`.']
 
         if tournament_name not in tournament_difficulty:
-            return f'Invalid tournament code {tournament_name}.'
+            return [f'Invalid tournament name {tournament_name}.']
         if gender not in ['LADIES', 'MEN']:
-            return f'Invalid gender {gender} should be LADIES or MEN.'
+            return [f'Invalid gender {gender} should be either LADIES or MEN.']
         if round_txt != 'ROUND':
-            return f"Second word has to be 'ROUND' not {round_txt}."
+            return [f"Second word has to be 'ROUND' not {round_txt}."]
         try:
             round_number = int(round_number)
             if round_number < 1 or round_number > number_of_rounds:
-                return f'Round number should be between 1 and {number_of_rounds}.'
+                return [f'Round number should be between 1 and {number_of_rounds}.']
         except:
+<<<<<<< HEAD
             return f'Round number should be an integer between 1 and {number_of_rounds}.'
 
         if filename in file_count:
             return f'Duplicate file name found {filename}'
 
+=======
+            return [f'Round number should be an integer between 1 and {number_of_rounds}.']
+        
+        if filename in file_count:
+            return [f'Duplicate file name found {filename}']
+        
+>>>>>>> refs/remotes/origin/main
         file_count[filename] = 1
 
         return None
@@ -234,9 +315,15 @@ def endpoint4():
         if error:
             errors.append(f'Invalid file name {f.filename}: {error}')
 
+<<<<<<< HEAD
     # Case 3: Check for N round length  & Check if number of rounds is okay
 
     # Get a count of all the labels
+=======
+    #Case 3: Check for N round length  & Check if number of rounds is okay
+    
+    #round_counts = {'TAE1': {'LADIES':5, 'MEN':5}}...
+>>>>>>> refs/remotes/origin/main
     round_counts = {}
     for f in files[3:]:
         basename = os.path.basename(f.filename)
@@ -246,15 +333,27 @@ def endpoint4():
         try:
             tournament_name, round_txt, round_number, gender = splitted_filename
         except:
+<<<<<<< HEAD
             return 'File name should have four parts separated by spaces.'
+=======
+            return ["File name should be formatted in `TNAME 'ROUND' RNUM GENDER` e.g. (TAE11 ROUND 1 MALE)."]
+        
+>>>>>>> refs/remotes/origin/main
 
         if tournament_name not in round_counts:
             round_counts[tournament_name] = {'LADIES': 0, 'MEN': 0}
 
         round_counts[tournament_name][gender] += 1
 
+<<<<<<< HEAD
     # print(round_counts)
     # Case 3.5 Check if number of rounds in each tournament is equal to correct number of rounds
+=======
+
+
+    #Case 3.5 Check if number of rounds in each tournament is equal to correct number of rounds
+    #Validates that the number of rounds in each tournament is valid
+>>>>>>> refs/remotes/origin/main
     for tournament_name in round_counts:
         if round_counts[tournament_name]['LADIES'] != number_of_rounds or round_counts[tournament_name]['MEN'] != number_of_rounds:
             errors.append(
@@ -266,22 +365,93 @@ def endpoint4():
 
     # File name/upload validation over.
 
+<<<<<<< HEAD
     # FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION
+=======
+    #File name/upload validation over. 
+
+    #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION #FILE CONTENT VALIDATION 
+    errors2 = []
+
+    for tournament_name in tournament_difficulty:
+        tournament_files = [f for f in files if f.filename.startswith(tournament_name)]
+        tournament_matches = de.get_tournament_matches(tournament_name, tournament_files)
+
+
+        for gender in ['ladies', 'men']:
+
+            expected_matches = length_of_players // 2 #16, 8, 4, 2, 1
+
+            for round_num in tournament_matches[gender]:
+                if gender == 'men': 
+                    max_score = 3
+                    temp_gender = 'male'
+
+                else: 
+                    max_score= 2
+                    temp_gender = 'female'
+
+                round_matches = tournament_matches[gender][round_num]
+                round_players = set() #used for finding duplicate
+
+
+                if len(round_matches) != expected_matches:
+                    return [f"Invalid match count in {gender} match {match} in round {round_num} in {tournament_name}"]
+                expected_matches = expected_matches // 2
+
+
+                for match in round_matches:
+                    try:
+                        if max_score not in list(match[1::2]) or match[1] == match[3] or any(score > max_score or score < 0 for score in match[1::2]): 
+                            errors2.append(f"Invalid score in {gender} match {match} in round {round_num} in {tournament_name}")
+                    except: #Goes here when it tries todo score comparison if its not an int.
+                        errors2.append(f"Invalid score in {gender} match {match} in round {round_num} in {tournament_name}. Score is not formatted correctly")
+
+                    p1 = match[0]
+                    p2 = match[2]
+                    #Player doesnt exist
+                    if p1 not in players[temp_gender] or p2 not in players[temp_gender]:
+                        errors2.append(f"Invalid player name in {gender}'s match {match} in round {round_num} in {tournament_name}")
+    
+
+                    #Duplicate
+                    if p1 in round_players or p2 in round_players:
+                        errors2.append(f"Duplicate player name in {gender}'s match {match} in round {round_num} in {tournament_name}")
+                    else:
+                        round_players.add(p1)
+                        round_players.add(p2)
+
+
+    print(players)
+
+
+
+    if errors2:
+        return errors2
+    else:
+        return ''
+
+
+        
+
+>>>>>>> refs/remotes/origin/main
 
     # One player must have no more or less than 3 score for a win
     # One player must have no more or less than 2 score for a win
 
+<<<<<<< HEAD
     return ''
 
 
+=======
+>>>>>>> refs/remotes/origin/main
 @app.route('/submit-form', methods=['POST'])
 def submit_form():
 
     print("Submit formmmmmmm")
 
     files = request.files.getlist('files')
-    for file in files:
-        print(file.filename)
-    # print(files)
 
+    new_files = [[files[0]], [files[1], files[2]], [files[3]], [files[4:]]]
+    print(new_files)
     return ''
