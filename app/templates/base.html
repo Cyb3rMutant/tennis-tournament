@@ -79,7 +79,7 @@
 			<div class="modal-content">
 				<div>
 					<div class="logo">
-						<a class="navbar-brand brand horizon"">
+						<a class="navbar-brand brand horizon">
 							Horizon 
 						   <span class="navbar-brand brand tennis"> Tennis </span>
 						</a>				
@@ -134,13 +134,8 @@
 						data: $("#login-form").serialize(), // serializes the form's elements.
 						success: function (data) {
 							if (data === "success") location.reload();
-<<<<<<< HEAD
 							document.getElementById("login_message").innerHTML = data;
-=======
 							document.getElementById("login-error").style.visibility = "visible";
-							document.getElementById("login_message").innerHTML =
-								data;
->>>>>>> refs/remotes/origin/main
 						},
 					});
 					e.preventDefault(); // block the traditional submission of the form.
