@@ -96,6 +96,7 @@ class Model():
             details['password_hash'] = sha256_crypt.hash(details['password'])
             #remove unnessasary data
             keys_list = ['confirm', 'accept_tos', 'password']  #keys to remove
+            print(details['accept_tos'])
             for key in keys_list:
                 del details[key]
             #add user into database

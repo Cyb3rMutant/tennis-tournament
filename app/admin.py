@@ -16,14 +16,10 @@ def admin():
     form = LoginForm(request.form)
     return render_template("admin.html", form=form, logged_in=model.logged_in())
 
-@app.route('/add-admin', methods=['GET', 'POST'])
+@app.route('/add-admin/', methods=['GET', 'POST'])
 def add_admin():
     form = LoginForm(request.form)
     reg_form = RegistrationForm(request.form)
-
-    print(reg_form.data)
-    for i in reg_form.data:
-        print(i)
 
     if request.method == 'POST' and reg_form.validate():
         print("TEST")
@@ -41,7 +37,6 @@ def add_admin():
             case _:
                 return status
 
-    print("hereeeeeeeeeeeee")
     return render_template("add_admin.html", form=form, logged_in=model.logged_in(), reg_form=reg_form)
 
 
