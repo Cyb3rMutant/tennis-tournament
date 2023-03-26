@@ -127,11 +127,11 @@ def endpoint3():
     try:
         prize_money = de.get_tournament_prizes([files[0]])
         if(prize_money == {}):
-            return 'File name MUST be "PRIZE MONEY.csv"'
+            return ['File name MUST be "PRIZE MONEY.csv"']
         else:
             pass
     except:
-        return 'Invalid File ??'
+        return ['Invalid File ??']
  
 
     print(prize_money)
@@ -140,20 +140,20 @@ def endpoint3():
     for key in de2.get_tournament_difficulty([files[1]]):
 
         if key not in prize_money:
-            return f'Tournament name {key} or more is missing from CSV'
+            return [f'Tournament name {key} or more is missing from CSV']
 
 
     #Case 2/3
     for k,v in prize_money.items():
         if len(v) != 8:
-            return 'Tournament should have prize money for ONLY top 8'
+            return ['Tournament should have prize money for ONLY top 8']
         for k2,v2 in v.items():
             try:
                 k2 = int(k2)
                 v2 = v2.replace(",", "")
                 v2 = int(v2)
             except:
-                return 'Value in Place & Prize IS NOT an integer'
+                return ['Value in Place & Prize IS NOT an integer']
 
 
     return ''
@@ -200,7 +200,7 @@ def endpoint4():
 
     #Case 1 validate file upload number:
     if len(files[3:]) != number_of_files_allowed:
-        return f'Number of files uploaded should be {number_of_files_allowed} not {len(files[3:])}'
+        return [f'Number of files uploaded should be {number_of_files_allowed} not {len(files[3:])}']
 
 
 
@@ -214,24 +214,24 @@ def endpoint4():
         try:
             tournament_name, round_txt, round_number, gender = splitted_filename
         except:
-            return 'File name should be formatted in `TNAME "ROUND" RNUM GENDER`.'
+            return ['File name should be formatted in `TNAME "ROUND" RNUM GENDER`.']
 
 
         if tournament_name not in tournament_difficulty:
-            return f'Invalid tournament name {tournament_name}.'
+            return [f'Invalid tournament name {tournament_name}.']
         if gender not in ['LADIES', 'MEN']:
-            return f'Invalid gender {gender} should be either LADIES or MEN.'
+            return [f'Invalid gender {gender} should be either LADIES or MEN.']
         if round_txt != 'ROUND':
-            return f"Second word has to be 'ROUND' not {round_txt}."
+            return [f"Second word has to be 'ROUND' not {round_txt}."]
         try:
             round_number = int(round_number)
             if round_number < 1 or round_number > number_of_rounds:
-                return f'Round number should be between 1 and {number_of_rounds}.'
+                return [f'Round number should be between 1 and {number_of_rounds}.']
         except:
-            return f'Round number should be an integer between 1 and {number_of_rounds}.'
+            return [f'Round number should be an integer between 1 and {number_of_rounds}.']
         
         if filename in file_count:
-            return f'Duplicate file name found {filename}'
+            return [f'Duplicate file name found {filename}']
         
         file_count[filename] = 1
 
@@ -259,7 +259,7 @@ def endpoint4():
         try:
             tournament_name, round_txt, round_number, gender = splitted_filename
         except:
-            return "File name should be formatted in `TNAME 'ROUND' RNUM GENDER` e.g. (TAE11 ROUND 1 MALE)."
+            return ["File name should be formatted in `TNAME 'ROUND' RNUM GENDER` e.g. (TAE11 ROUND 1 MALE)."]
         
 
         if tournament_name not in round_counts:
@@ -310,7 +310,7 @@ def endpoint4():
 
 
                 if len(round_matches) != expected_matches:
-                    return f"Invalid match count in {gender} match {match} in round {round_num} in {tournament_name}"
+                    return [f"Invalid match count in {gender} match {match} in round {round_num} in {tournament_name}"]
                 expected_matches = expected_matches // 2
 
 
