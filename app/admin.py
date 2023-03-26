@@ -294,7 +294,7 @@ def endpoint4():
 
             expected_matches = length_of_players // 2 #16, 8, 4, 2, 1
 
-            for round_num in tournament_matches[gender]:
+            for round_num in range(len(tournament_matches[gender])):
                 if gender == 'men': 
                     max_score = 3
                     temp_gender = 'male'
@@ -303,8 +303,8 @@ def endpoint4():
                     max_score= 2
                     temp_gender = 'female'
 
-                round_matches = tournament_matches[gender][round_num]
-                round_players = set() #used for finding duplicate
+                round_matches = tournament_matches[gender][str(round_num+1)]
+                round_players = set() #used for finding duplicate  
 
                 if len(round_matches) != expected_matches:
                     return [f"Invalid number of matches  in {gender}  round {round_num} in {tournament_name}"]
