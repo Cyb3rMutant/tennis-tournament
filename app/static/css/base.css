@@ -88,6 +88,77 @@
     border-radius: 6px;
 }
 
+/* The Modal (background) */
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+	background-color: #0d0a149a;
+	margin: 15% auto; /* 15% from the top and centered */
+	padding: 20px;
+	border: 2px solid #8cff00a2;
+	width: 90%; /* Could be more or less, depending on screen size */
+	height: fit-content;
+	border-radius: 5px;
+}
+
+/* The Close Button */
+.close {
+	color: #e0e0e0;
+	margin-left: 95%;
+	float: right;
+	font-size: 32px;
+	font-weight: bold;
+	width: 20px;
+}
+
+.close:hover,
+.close:focus {
+	color: #fff;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+#login-form div{
+	margin-bottom: 16px;
+}
+
+#login-form label{
+	color: #fefefe;
+	float: left;
+	font-weight: bold;
+	font-family: 'Roboto', sans-serif;
+}
+
+#login-form input{
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #0d0a149a;
+	border-radius: 2px;
+}
+
+.login-form-btn {
+	margin-top: 12px;
+	font-family: 'Roboto', sans-serif;
+	background-color: #8cff00;
+	transition-duration: 300ms;
+}
+
+.login-form-btn:hover {
+	background-color: #81eb00;
+}
+
 /*Tablet*/
 @media only screen and (min-width: 992px) {
 
@@ -114,6 +185,10 @@
 	.navbar-brand {
 		font-size: 35px !important;
 	}
+	.modal-content {
+		width: 50%;
+		height: fit-content;
+	}
 }
 
 /*Desktop*/
@@ -137,42 +212,7 @@
 		border-bottom: 2px solid #8cff00;
 		border-radius: 2px;
 	}
-}
-
-/* The Modal (background) */
-.modal {
-	display: none; /* Hidden by default */
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
-	background-color: rgb(0, 0, 0); /* Fallback color */
-	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-/* Modal Content/Box */
-.modal-content {
-	background-color: #fefefe;
-	margin: 15% auto; /* 15% from the top and centered */
-	padding: 20px;
-	border: 1px solid #888;
-	width: 80%; /* Could be more or less, depending on screen size */
-}
-
-/* The Close Button */
-.close {
-	color: #aaa;
-	float: right;
-	font-size: 28px;
-	font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-	color: black;
-	text-decoration: none;
-	cursor: pointer;
+	.modal-content {
+		width: 25%;
+	}
 }

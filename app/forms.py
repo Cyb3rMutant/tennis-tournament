@@ -10,6 +10,6 @@ class RegistrationForm(Form):
 
 
 class LoginForm(Form):
-    email = StringField('Email Address', [validators.InputRequired(), validators.Length(min=6, max=35)])
-    password = PasswordField('Password')
+    email = StringField('Email Address', [validators.InputRequired(), validators.Length(min=6, max=35)], render_kw={"placeholder": "Email Address"})
+    password = PasswordField('Password', render_kw={"placeholder": "Password"})
 
