@@ -63,11 +63,11 @@ def endpoint1():
         de.get_tournament_difficulty(files)
         return ''
     except BadFileError:
-        return 'File is fake docx'
+        return ['File is fake docx']
     except WrongFileExtensionError:
-        return 'File is not a docx'
+        return ['File is not a docx']
     except UnformattedDocx: 
-        return 'File contents are invalid'
+        return ['File contents are invalid']
 
 
 
@@ -83,26 +83,26 @@ def endpoint2():
         try:
             data = de.get_players([f])
             if data == {}: 
-                return 'Files are Invalid'
+                return ['Files are Invalid']
             
             #UNIQUE values for set allowed only
             for k, v in data.items():
                 players[k].update(v)  
                 
         except WrongFileExtensionError:
-            return 'Files are not CSV' 
+            return ['Files are not CSV']
 
         except:
-            return 'Only MALE or FEMALE players'
+            return ['Only MALE or FEMALE players']
     
     #Case 2 - Uneven participant number
     if len(players['male']) != len(players['female']): #Something with Nan's sometimes randomly
-        return 'Men and women must have same number of participants! No duplicates allowed'
+        return ['Men and women must have same number of participants! No duplicates allowed']
 
 
 
     if math.log2(len(players['male'])).is_integer() == False:
-        return 'Player count must be a power of 2. (e.g. 16,32,64...)'
+        return ['Player count must be a power of 2. (e.g. 16,32,64...)']
 
 
     #Case 3 - Player name does not start with MP or FP
@@ -110,7 +110,7 @@ def endpoint2():
     for gender in prefixes:
         for player in players[gender]:
             if not player.startswith(prefixes[gender]):
-                return f'Invalid {gender} player name'
+                return [f'Invalid {gender} player name']
 
 
     # print(players)
