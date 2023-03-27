@@ -1,3 +1,4 @@
+from tkinter import Menu
 from flask import render_template, request, url_for, redirect
 from app import app
 from models import model
@@ -313,20 +314,20 @@ def endpoint4():
                 for match in round_matches:
                     try:
                         if max_score not in list(match[1::2]) or match[1] == match[3] or any(score > max_score or score < 0 for score in match[1::2]): 
-                            errors2.append(f"Invalid score in {gender} match {match} in round {round_num} in {tournament_name}")
+                            errors2.append(f"Invalid score in {gender} match {match} in round {round_num+1} in {tournament_name}")
                     except: #Goes here when it tries todo score comparison if its not an int.
-                        errors2.append(f"Invalid score in {gender} match {match} in round {round_num} in {tournament_name}. Score is not formatted correctly")
+                        errors2.append(f"Invalid score in {gender} match {match} in round {round_num+1} in {tournament_name}. Score is not formatted correctly")
 
                     p1 = match[0]
                     p2 = match[2]
                     #Player doesnt exist
                     if p1 not in players[temp_gender] or p2 not in players[temp_gender]:
-                        errors2.append(f"Invalid player name in {gender}'s match {match} in round {round_num} in {tournament_name}")
+                        errors2.append(f"Invalid player name in {gender}'s match {match} in round {round_num+1} in {tournament_name}")
     
 
                     #Duplicate
                     if p1 in round_players or p2 in round_players:
-                        errors2.append(f"Duplicate player name in {gender}'s match {match} in round {round_num} in {tournament_name}")
+                        errors2.append(f"Duplicate player name in {gender}'s match {match} in round {round_num+1} in {tournament_name}")
                     else:
                         round_players.add(p1)
                         round_players.add(p2)
