@@ -22,3 +22,7 @@ class Match(object):
 
     def get_winner(self) -> Player:
         return self.__winner
+
+    def get_loser(self):
+        return sorted(self.__sets.items(), key= lambda i: i[1])[0][0]
+

@@ -353,8 +353,11 @@ def submit_form():
     print("Submit formmmmmmm")
 
     files = request.files.getlist('files')
+# difficulty, players (idk which order), prize money, match files
+    new_files = [[files[0]], [files[1], files[2]], [files[3]], files[4:]]
 
-    new_files = [[files[0]], [files[1], files[2]], [files[3]], [files[4:]]]
+    
+    model.calculate_points(model.upload_data(new_files))
     print(new_files)
     return ''
 

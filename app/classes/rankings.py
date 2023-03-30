@@ -16,4 +16,4 @@ class Rankings(object):
             return False
 
     def update_positions(self) -> bool:
-        pass
+        self.__positions.sort(key=lambda p: p.get_ranking_points(), reverse=True)

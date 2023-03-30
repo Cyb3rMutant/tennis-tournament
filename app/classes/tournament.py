@@ -3,15 +3,21 @@ from classes.location import Location
 
 
 class Tournament(object):
-    def __init__(self, name: str, difficulty: float, prizes: list) -> None:
+    def __init__(self, id,  name: str, difficulty: float, prizes: list) -> None:
+
+        self.__id = id
 
         self.__name = name
 
         self.__difficulty = difficulty
+        print(difficulty, type(difficulty))
 
         self.__prizes = prizes
 
         self.__competitions: list = list()
+
+    def get_id(self):
+        return self.__id
 
     def get_name(self) -> str:
         return self.__name
