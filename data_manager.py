@@ -90,7 +90,7 @@ class DataManager:
 
 class DataExtractor(metaclass=ABCMeta):
     '''
-    The Data Extractor class is used to extract data from csv and docx files (WIP)
+    The Data Extractor class is used to extract data from csv and docx files.
 
     Attributes:
         _method: A string describing how the data files are inputted.
@@ -319,16 +319,20 @@ if(__name__ == "__main__"):
     # print(de.get_tournament_matches("tac1").get("men").get("5")[0][2])
     
     files = []
-    openFile(files, "RANKING POINTS.csv")
-    # openFile(files, "MALE PLAYERS.csv")
-    # openFile(files, "FEMALE PLAYERS.csv")
+    # openFile(files, "RANKING POINTS.csv")
+    openFile(files, "MALE PLAYERS.csv")
+    openFile(files, "FEMALE PLAYERS.csv")
     # openFile(files, "TAC1 ROUND 5 MEN.csv")
+    # openFile(files, "TAC1 ROUND 1 LADIES.csv")
     # openFile(files, "TAC1 ROUND 2 LADIES.csv")
+    # openFile(files, "TAC1 ROUND 3 LADIES.csv")
+    # openFile(files, "TAC1 ROUND 4 LADIES.csv")
+    # openFile(files, "TAC1 ROUND 5 LADIES.csv")
     # openFile(files, "TAC1 ROUND 3 LADIES.csv")
     # openFile(files, "PRIZE MONEY.csv")
     
     # print(de.get_tournament_prizes(files=files))
-    print(de.get_ranking_points(files))
+    print(de.get_players(files))
 
 
     

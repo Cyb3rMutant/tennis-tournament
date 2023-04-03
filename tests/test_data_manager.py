@@ -84,9 +84,15 @@ def test_get_tournament_difficulty(data_extractor_docx, open_file, input_filenam
          # wrongly formatted csv file will return empty dict
          ("PRIZE MONEY.csv", {}),
 
-        ("MALE PLAYERS.csv,FEMALE PLAYERS.csv", (np.array(['MP01', 'MP02', 'MP03', 'MP04', 'MP05', 'MP06', 'MP07', 'MP08', 'MP09', 'MP10', 'MP11', 'MP12', 'MP13', 'MP14', 'MP15', 'MP16', 'MP17', 'MP18', 'MP19', 'MP20', 'MP21', 'MP22', 'MP23', 'MP24', 'MP25', 'MP26', 'MP27', 'MP28', 'MP29', 'MP30', 'MP31', 'MP32']), 
-                                                 np.array(['FP01', 'FP02', 'FP03', 'FP04', 'FP05', 'FP06', 'FP07', 'FP08', 'FP09', 'FP10', 'FP11', 'FP12', 'FP13', 'FP14', 'FP15', 'FP16', 'FP17', 'FP18', 'FP19', 'FP20', 'FP21', 'FP22', 'FP23', 'FP24', 'FP25', 'FP26', 'FP27', 'FP28', 'FP29', 'FP30', 'FP31', 'FP32'])
-                                                )),
+        ("MALE PLAYERS.csv,FEMALE PLAYERS.csv", ({'data/male': np.array(['MP01', 'MP02', 'MP03', 'MP04', 'MP05', 'MP06', 'MP07', 'MP08',
+                                                                    'MP09', 'MP10', 'MP11', 'MP12', 'MP13', 'MP14', 'MP15', 'MP16',
+                                                                    'MP17', 'MP18', 'MP19', 'MP20', 'MP21', 'MP22', 'MP23', 'MP24',
+                                                                    'MP25', 'MP26', 'MP27', 'MP28', 'MP29', 'MP30', 'MP31', 'MP32'],
+                                                                    dtype=object), 'data/female': np.array(['FP01', 'FP02', 'FP03', 'FP04', 'FP05', 'FP06', 'FP07', 'FP08',
+                                                                    'FP09', 'FP10', 'FP11', 'FP12', 'FP13', 'FP14', 'FP15', 'FP16',
+                                                                    'FP17', 'FP18', 'FP19', 'FP20', 'FP21', 'FP22', 'FP23', 'FP24',
+                                                                    'FP25', 'FP26', 'FP27', 'FP28', 'FP29', 'FP30', 'FP31', 'FP32'],
+                                                                    dtype=object)})),
 
         # if no files are inputted, assert that an exception occured
          ("", ""))
@@ -100,8 +106,8 @@ def test_get_players(data_extractor_csv, open_file, input_filenames, expected):
         open_file(files, filename)
     try:
         players = data_extractor_csv.get_players(files)
-        assert (players["data/male"] == expected[0]).all()
-        assert (players["data/female"] == expected[1]).all()
+        for gender in players:
+            assert np.array_equal(players[gender], expected[gender])
     except FileNotFoundError:
         # assert that if an exception occurs its a FileNotFoundError exception
         with pytest.raises(FileNotFoundError):
@@ -158,3 +164,61 @@ def test_get_ranking_points(data_extractor_csv, open_file, input_filename, expec
         with pytest.raises(FileNotFoundError):
             data_extractor_csv.get_ranking_points(files)
             assert "" == expected
+
+@pytest.mark.parametrize(
+        ('input_filenames', 'expected'),
+
+         # wrongly formatted files will return empty dict
+        (("ALIEN PLAYERS.docx", {}),
+         ("PRIZE MONEY.csv", {}),
+
+        ("TAC1 ROUND 1 LADIES.csv,TAC1 ROUND 2 LADIES.csv,TAC1 ROUND 3 LADIES.csv,TAC1 ROUND 4 LADIES.csv,TAC1 ROUND 5 LADIES.csv", ({'ladies': {'1': np.array([['FP24', 1, 'FP01', 2],
+                                                                                                                                                                ['FP14', 2, 'FP05', 1],
+                                                                                                                                                                ['FP19', 0, 'FP16', 2],
+                                                                                                                                                                ['FP22', 2, 'FP12', 1],
+                                                                                                                                                                ['FP23', 2, 'FP32', 0],
+                                                                                                                                                                ['FP17', 1, 'FP18', 2],
+                                                                                                                                                                ['FP26', 2, 'FP30', 1],
+                                                                                                                                                                ['FP31', 0, 'FP29', 2],
+                                                                                                                                                                ['FP27', 0, 'FP28', 2],
+                                                                                                                                                                ['FP02', 2, 'FP25', 0],
+                                                                                                                                                                ['FP03', 2, 'FP09', 0],
+                                                                                                                                                                ['FP04', 1, 'FP13', 2],
+                                                                                                                                                                ['FP07', 2, 'FP06', 0],
+                                                                                                                                                                ['FP10', 2, 'FP08', 0],
+                                                                                                                                                                ['FP15', 2, 'FP11', 1],
+                                                                                                                                                                ['FP21', 0, 'FP20', 2]], dtype=object), '2': np.array([['FP01', 2, 'FP16', 0],
+                                                                                                                                                                ['FP22', 2, 'FP14', 1],
+                                                                                                                                                                ['FP23', 1, 'FP29', 2],
+                                                                                                                                                                ['FP18', 2, 'FP26', 2],
+                                                                                                                                                                ['FP10', 2, 'FP28', 0],
+                                                                                                                                                                ['FP13', 2, 'FP02', 1],
+                                                                                                                                                                ['FP03', 0, 'FP07', 2],
+                                                                                                                                                                ['FP15', 0, 'FP20', 2]], dtype=object), '3': np.array([['FP22', 2, 'FP29', 1],
+                                                                                                                                                                ['FP10', 2, 'FP01', 1],
+                                                                                                                                                                ['FP26', 2, 'FP20', 1],
+                                                                                                                                                                ['FP13', 0, 'FP07', 2]], dtype=object), '4': np.array([['FP22', 0, 'FP07', 2],
+                                                                                                                                                                ['FP10', 2, 'FP26', 1]], dtype=object), '5': np.array([['FP10', 0, 'FP07', 2]], dtype=object)}}
+                                                                                                                                                                )),
+
+        # if no files are inputted, assert that an exception occured
+        ("", ""))
+)
+def test_get_matches(data_extractor_csv, open_file, input_filenames, expected):
+    files = []
+    
+    filenames = input_filenames.split(",")
+
+    for filename in filenames:
+        open_file(files, filename)
+    try:
+        matches = data_extractor_csv.get_tournament_matches("TAC1", files)
+        for match in matches["ladies"]:
+            assert np.array_equal(matches["ladies"][match], expected["ladies"][match])
+    except FileNotFoundError:
+        # assert that if an exception occurs its a FileNotFoundError exception
+        with pytest.raises(FileNotFoundError):
+            data_extractor_csv.get_players(files)
+            assert expected == ""
+    except KeyError:
+        assert expected == {}
