@@ -22,7 +22,7 @@ class Model():
     def __init__(self):
         ca = certifi.where()
         cluster = "mongodb+srv://strings:6Zd69XPFvPbt0Wfw@tennis-tournament.v5i5qjj.mongodb.net/?retryWrites=true&w=majority"
-        client = MongoClient()
+        client = MongoClient(cluster, tlsCAFile=ca)
         self.__db = client.TennisDB
         self.__players = {'M': Rankings(), 'F': Rankings()}
         self.__tournament_cache: list[ObjectId] = dict()
