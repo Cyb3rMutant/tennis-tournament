@@ -70,11 +70,15 @@ def endpoint1():
 
 
 
+
 #Players (Multiple files)
 @app.route('/endpoint2', methods=['POST'])
 def endpoint2():
     print("endpoint2")
     files = request.files.getlist('files')
+    return endpoint2_process_files(files)
+
+def endpoint2_process_files(files):
     de = DataExtractorCSV()
 
     players = {'male': set(), 'female': set()}
@@ -83,37 +87,31 @@ def endpoint2():
             data = de.get_players([f])
             if data == {}: 
                 return ['Files are Invalid']
-            
+
             #UNIQUE values for set allowed only
             for k, v in data.items():
+                print(k, v)
                 players[k].update(v)  
-                
-        except WrongFileExtensionError:
-            return ['Files are not CSV']
-
         except:
             return ['Only MALE or FEMALE players']
-    
+
     #Case 2 - Uneven participant number
     if len(players['male']) != len(players['female']): #Something with Nan's sometimes randomly
-        return ['Men and women must have same number of participants! No duplicates allowed']
-
-
-
+        return ['Men and women must have same number of participants! No duplicates allowed']   
     if math.log2(len(players['male'])).is_integer() == False:
-        return ['Player count must be a power of 2. (e.g. 16,32,64...)']
-
-
+        return ['Player count must be a power of 2. (e.g. 16,32,64...)']    
     #Case 3 - Player name does not start with MP or FP
     prefixes = {'male': 'MP', 'female': 'FP'}
     for gender in prefixes:
         for player in players[gender]:
             if not player.startswith(prefixes[gender]):
-                return [f'Invalid {gender} player name']
-
-
+                return [f'Invalid {gender} player name']    
     # print(players)
     return ''
+
+
+
+ 
 
 
 #Prize money (Single file)
