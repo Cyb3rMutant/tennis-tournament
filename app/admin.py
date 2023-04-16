@@ -52,14 +52,12 @@ def add_season():
     return render_template("add_season.html", form=form, logged_in=model.logged_in())
 
 
-#Tournament difficulty (Single file)
-@app.route('/endpoint1', methods=['POST'])
-def endpoint1():
-    files = request.files.getlist('files')
+def endpoint1_process_files(files):
     de = DataExtractorDOCX()
-    
+
     try:
-        de.get_tournament_difficulty(files)
+        print(de.get_tournament_difficulty(files))
+
         return ''
     except BadFileError:
         return ['File is fake docx']
@@ -68,15 +66,13 @@ def endpoint1():
     except UnformattedDocx: 
         return ['File contents are invalid']
 
-
-
-
-#Players (Multiple files)
-@app.route('/endpoint2', methods=['POST'])
-def endpoint2():
-    print("endpoint2")
+#Tournament difficulty (Single file)
+@app.route('/endpoint1', methods=['POST'])
+def endpoint1():
     files = request.files.getlist('files')
-    return endpoint2_process_files(files)
+    return endpoint1_process_files(files)
+
+
 
 def endpoint2_process_files(files):
     de = DataExtractorCSV()
@@ -110,14 +106,16 @@ def endpoint2_process_files(files):
     return ''
 
 
-
- 
-
-
-#Prize money (Single file)
-@app.route('/endpoint3', methods=['POST'])
-def endpoint3():
+#Players (Multiple files)
+@app.route('/endpoint2', methods=['POST'])
+def endpoint2():
+    print("endpoint2")
     files = request.files.getlist('files')
+    return endpoint2_process_files(files)
+
+
+
+def endpoint3_process_files(files):
     de = DataExtractorCSV()
     de2 = DataExtractorDOCX()
     
@@ -150,21 +148,22 @@ def endpoint3():
                 v2 = v2.replace(",", "")
                 v2 = int(v2)
             except:
-                return ['Value in Place & Prize IS NOT an integer']
+                return ['Value in Place or/and Prize IS NOT an integer']
 
 
     return ''
 
 
-
-
-
-
-#Match data (Multiple files)
-@app.route('/endpoint4', methods=['POST'])
-def endpoint4():
-    print("endpoint4")
+#Prize money (Single file)
+@app.route('/endpoint3', methods=['POST'])
+def endpoint3():
     files = request.files.getlist('files')
+    return endpoint3_process_files(files)
+
+
+
+
+def endpoint4_process_files(files):
 
     de = DataExtractorCSV()
     de2 = DataExtractorDOCX()
@@ -219,7 +218,7 @@ def endpoint4():
         if gender not in ['LADIES', 'MEN']:
             return [f'Invalid gender {gender} should be either LADIES or MEN.']
         if round_txt != 'ROUND':
-            return [f"Second word has to be 'ROUND' not {round_txt}."]
+            return [f'Second word has to be "ROUND" not {round_txt}.']
         try:
             round_number = int(round_number)
             if round_number < 1 or round_number > number_of_rounds:
@@ -243,9 +242,10 @@ def endpoint4():
         if error:
             errors.append(f'Invalid file name {f.filename}: {error}')
     
-
+    if errors:
+        return errors
     #Case 3: Check for N round length  & Check if number of rounds is okay
-    
+    errors = []
     #round_counts = {'TAE1': {'LADIES':5, 'MEN':5}}...
     round_counts = {}
     for f in files[3:]:
@@ -268,6 +268,7 @@ def endpoint4():
 
     #Case 3.5 Check if number of rounds in each tournament is equal to correct number of rounds
     #Validates that the number of rounds in each tournament is valid
+    #REDUNDANT
     for tournament_name in round_counts:
         if round_counts[tournament_name]['LADIES'] != number_of_rounds or round_counts[tournament_name]['MEN'] != number_of_rounds:
             errors.append(f'Tournament {tournament_name} should have {number_of_rounds} rounds for both men and women.')
@@ -306,7 +307,7 @@ def endpoint4():
                 round_players = set() #used for finding duplicate  
 
                 if len(round_matches) != expected_matches:
-                    return [f"Invalid number of matches  in {gender}  round {round_num} in {tournament_name}"]
+                    return [f"Invalid number of matches  in {gender}  round {round_num+1} in {tournament_name}"]
                 expected_matches = expected_matches // 2
 
                 for match in round_matches:
@@ -339,6 +340,13 @@ def endpoint4():
         return errors2
     else:
         return ''
+
+#Match data (Multiple files)
+@app.route('/endpoint4', methods=['POST'])
+def endpoint4():
+    print("endpoint4")
+    files = request.files.getlist('files')
+    return endpoint4_process_files(files)
 
 
         
