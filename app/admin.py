@@ -56,7 +56,7 @@ def endpoint1_process_files(files):
     de = DataExtractorDOCX()
 
     try:
-        print(de.get_tournament_difficulty(files))
+        files = de.get_tournament_difficulty(files)
 
         return ''
     except BadFileError:
