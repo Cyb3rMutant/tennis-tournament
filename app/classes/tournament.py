@@ -26,7 +26,6 @@ class Tournament(object):
         return self.__difficulty
 
     def get_prizes(self) -> list:
-
         return self.__prizes
 
     def get_competitions(self) -> list:

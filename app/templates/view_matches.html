@@ -13,7 +13,20 @@
         <canvas id="tournament"></canvas>
     </div>
     <div class="content-wrapper" style="width: 50%; margin-left: 1%; color: #fefefe">
-        hi
+        {% for i, t in enumerate(players) %}
+        <table id="{{ i }}" style="display: none;">
+            <tr>
+                <th>player</th>
+                <th>prize</th>
+            </tr>
+            {% for pl, pz in t.items() %}
+                <tr>
+                    <td>{{ pl.get_name() }}</td>
+                    <td>{{ pz.get_currency() }} {{ pz.get_amount() }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endfor %}
     </div>
 </div>
     <script>
@@ -41,10 +54,14 @@
     }
         $(document).ready(function () {
             $('#tournament').jTournament(options, matchInfo[type_index]);
+            document.getElementById(type_index.toString()).style.display = "table";
+
         });
 
         function myFunction(){
+            document.getElementById(type_index.toString()).style.display = "none";
             type_index = type_index ^ 1;
+            document.getElementById(type_index.toString()).style.display = "table";
             $('#tournament').jTournament(options, matchInfo[type_index]);
         }
     </script>

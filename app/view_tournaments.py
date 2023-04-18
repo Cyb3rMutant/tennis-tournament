@@ -17,7 +17,9 @@ def view_tournaments():
 def view_matches(season, tournament):
     form = LoginForm(request.form)
     t = model.get_tournament(season, tournament)
-    return render_template("view_matches.html", form=form, logged_in=model.logged_in(), competitions = [json.dumps(c) for c in t])
+    p = model.get_tournament_winners_and_prizes(season, tournament)
+    print(p)
+    return render_template("view_matches.html", form=form, logged_in=model.logged_in(), competitions = [json.dumps(c) for c in t], players = p, enumerate=enumerate)
 
 @app.route('/view-player-rankings')
 def view_player_rankings():

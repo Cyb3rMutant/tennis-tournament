@@ -116,6 +116,18 @@ class Model():
         self.__tournament_cache[t_id] = [tournament.to_json(), datetime.now(), tournament]
         return self.__tournament_cache[t_id][0]
 
+    def get_tournament_winners_and_prizes(self, s_id, t_id):
+        tournament: Tournament = self.__seasons[ObjectId(s_id)].get_tournaments()[ObjectId(t_id)]
+        prizes = tournament.get_prizes()
+        winners_and_prizes = []
+        for c in tournament.get_competitions():
+            matches = c.get_matches()
+            winners_and_prizes.append({matches[0].get_players()[matches[0].get_winner()]: prizes[0]})
+            for i in range(1, len(prizes)):
+                winners_and_prizes[-1][matches[i].get_players()[matches[i].get_loser()]] = prizes[i]
+
+        return winners_and_prizes
+
     def player_ids_to_objects(self, ids: list[ObjectId], p_tupe : str) -> dict:
         players = {}
         all_players = self.__players[p_tupe]
@@ -181,7 +193,7 @@ class Model():
         tournament_ids = []
         #get prize data 
         for tournament in tournament_dict.keys():
-            prize_money = [p for p in prize_dict[tournament].items()]
+            prize_money = [p[1] for p in prize_dict[tournament].items()]
             prize_id = self.__db.prizes.insert_one({'amounts': prize_money, 'currency': "$"}).inserted_id
             print(tournament_dict)
             t_id = self.__db.tournaments.insert_one({'name': tournament, 'difficulty': float(tournament_dict[tournament]), 'prize_id': prize_id}).inserted_id

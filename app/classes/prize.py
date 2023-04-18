@@ -6,5 +6,5 @@ class Prize(object):
     def get_amount(self) -> int:
         return self.__amount
 
-    def set_amount(self, amount: int) -> None:
-        self.__amount = amount
+    def get_currency(self) -> int:
+        return self.__currency
