@@ -3,9 +3,13 @@ from bson.objectid import ObjectId
 
 
 class Season(object):
-    def __init__(self, name: str):
+    def __init__(self, id, name: str):
         self.__name: str = name
+        self.__id: str = id
         self.__tournaments: dict= dict()
+
+    def get_id(self):
+        return self.__id
 
     def get_name(self) -> str:
         return self.__name

@@ -45,7 +45,7 @@ class Model():
         self.__seasons = dict()
 
         for s in seasons:
-            season = Season(s["name"])
+            season = Season(s["_id"], s["name"])
             tournaments = self.__db.tournaments.find({"_id": {"$in": s["tournament_ids"]}})
             for t in tournaments:
                 prizes = self.__db.prizes.find_one({"_id": t["prize_id"]})
@@ -223,7 +223,7 @@ class Model():
 
         new_season = self.__db.seasons.find_one({"_id": s_id})
 
-        season = Season(new_season["name"])
+        season = Season(new_season["_id"], new_season["name"])
         tournaments = self.__db.tournaments.find({"_id": {"$in": new_season["tournament_ids"]}})
         for t in tournaments:
             prizes = self.__db.prizes.find_one({"_id": t["prize_id"]})
@@ -237,7 +237,7 @@ class Model():
     def calculate_points(self, season: Season):
         points = [p['points'] for p in self.__db.ranking_points.find().sort('place', pymongo.ASCENDING)]
         for tournament in season.get_tournaments().values():
-            self.load_tournament(tournament)
+            self.get_tournament(str(season.get_id()), tournament.get_id())
             for competition in tournament.get_competitions():
                 matches = competition.get_matches()
                 matches[0].get_players()[matches[0].get_winner()].update_ranking_points(points[0])
