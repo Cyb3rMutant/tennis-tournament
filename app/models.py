@@ -171,7 +171,7 @@ class Model():
 
         players_dict = de_csv.get_players(files[1])  #players stored as array under key for their gender
         for t in players_dict:
-            for p in t:
+            for p in players_dict[t]:
                 if p_id:=self.__db.players.update_one({"name": p}, {"$setOnInsert": {"ranking_points": 0, "type": t[0].upper()}}, upsert=True).upserted_id:
                     player = Player(p_id, p, 0)
                     self.__players[t[0].upper()].add_player(player, len(self.__players[t[0].upper()].get_positions()))
