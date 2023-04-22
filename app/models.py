@@ -231,7 +231,7 @@ class Model():
                 #insert all the matches for that competition and round into the db
                 self.__db.matches.insert_many(competition_round_matches)
 
-        s_id = self.__db.seasons.insert_one({"name": "Season %d"%len(self.__seasons), "tournament_ids": tournament_ids}).inserted_id
+        s_id = self.__db.seasons.insert_one({"name": "Season %d"%(len(self.__seasons)+1), "tournament_ids": tournament_ids}).inserted_id
 
         new_season = self.__db.seasons.find_one({"_id": s_id})
 
