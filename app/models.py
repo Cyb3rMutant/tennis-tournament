@@ -22,20 +22,20 @@ class Model():
     def __init__(self):
         ca = certifi.where()
         cluster = "mongodb+srv://strings:6Zd69XPFvPbt0Wfw@tennis-tournament.v5i5qjj.mongodb.net/?retryWrites=true&w=majority"
-        client = MongoClient(cluster, tlsCAFile=ca)
+        client = MongoClient()
         self.__db = client.TennisDB
         self.__players = {'M': Rankings(), 'F': Rankings()}
         self.__tournament_cache: list[ObjectId] = dict()
 
-        m_players = self.__db.players.find({"type": 'M'}).sort('ranking_points')
-        rank = 0
+        m_players = self.__db.players.find({"type": 'M'}).sort('ranking_points', pymongo.DESCENDING)
+        rank = 1
         for p in m_players:
             player = Player(p['_id'], p['name'], p['ranking_points'])
             self.__players['M'].add_player(player, rank)
             rank+=1
 
-        f_players = self.__db.players.find({"type": 'F'}).sort('ranking_points')
-        rank = 0
+        f_players = self.__db.players.find({"type": 'F'}).sort('ranking_points', pymongo.DESCENDING)
+        rank = 1
         for p in f_players:
             player = Player(p['_id'], p['name'], p['ranking_points'])
             self.__players['F'].add_player(player, rank)
@@ -248,16 +248,17 @@ class Model():
 
     def calculate_points(self, season: Season):
         points = [p['points'] for p in self.__db.ranking_points.find().sort('place', pymongo.ASCENDING)]
+        print(points)
         for tournament in season.get_tournaments().values():
             self.get_tournament(str(season.get_id()), tournament.get_id())
             for competition in tournament.get_competitions():
                 matches = competition.get_matches()
-                matches[0].get_players()[matches[0].get_winner()].update_ranking_points(points[0])
+                points_won = points[0] * tournament.get_difficulty()
+                matches[0].get_players()[matches[0].get_winner()].update_ranking_points(points_won)
+                self.__db.players.update_one({"_id": matches[0].get_players()[matches[0].get_winner()].get_id()}, {"$inc": {"ranking_points": points_won}})
                 for i, m in enumerate(matches):
-                    print(m.get_round())
                     if i > len(points)-2:
                         break
-                    print(type(tournament.get_difficulty()))
                     points_won = points[i+1] * tournament.get_difficulty()
                     player = m.get_players()[m.get_loser()]
                     player.update_ranking_points(points_won)
