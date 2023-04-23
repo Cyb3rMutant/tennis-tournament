@@ -3,30 +3,63 @@
 {% block head %}
      <script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
      <script src="{{ url_for('static',filename='jquery/jTournament.js') }}"></script>
+     <style>
+         .parent-wrapper {
+            display: flex;
+            width: 100%;
+        }
+
+        .content-wrapper {
+            width: 50%;
+            margin-left: 1%;
+            color: #fefefe;
+        }
+
+        .content-wrapper:first-child {
+            overflow: auto;
+            max-width: 100%;
+            width: fit-content;
+        }
+
+        /* Media query for mobile devices */
+        @media (max-width: 767px) {
+            .parent-wrapper {
+                display: block;
+            }
+
+            .content-wrapper {
+                width: 97%;
+                margin-left: 0%;
+            }
+        }
+
+     </style>
 {% endblock %}
 {% block content %}
 <div style="text-align:center;">
     <button onclick="myFunction()" class="switch-button">Switch Gender</button> 
 </div>
 <div style="display: flex;">
-    <div class="content-wrapper" style="overflow: auto; max-width: 100%; width: fit-content;">
-        <canvas id="tournament"></canvas>
-    </div>
-    <div class="content-wrapper" style="width: 50%; margin-left: 1%; color: #fefefe">
-        {% for i, t in enumerate(players) %}
-        <table id="{{ i }}" style="display: none;">
-            <tr>
-                <th>player</th>
-                <th>prize</th>
-            </tr>
-            {% for pl, pz in t.items() %}
+    <div class="parent-wrapper">
+        <div class="content-wrapper">
+            <canvas id="tournament"></canvas>
+        </div>
+        <div class="content-wrapper">
+            {% for i, t in enumerate(players) %}
+            <table id="{{ i }}" style="display: none;">
                 <tr>
-                    <td>{{ pl.get_name() }}</td>
-                    <td>{{ pz.get_currency() }} {{ pz.get_amount() }}</td>
+                    <th>player</th>
+                    <th>prize</th>
                 </tr>
+                {% for pl, pz in t.items() %}
+                    <tr>
+                        <td>{{ pl.get_name() }}</td>
+                        <td>{{ pz.get_currency() }} {{ pz.get_amount() }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
             {% endfor %}
-        </table>
-        {% endfor %}
+        </div>
     </div>
 </div>
     <script>
