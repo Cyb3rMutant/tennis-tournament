@@ -4,8 +4,8 @@ from bson.objectid import ObjectId
 
 class Season(object):
     def __init__(self, id, name: str):
-        self.__name: str = name
         self.__id: str = id
+        self.__name: str = name
         self.__tournaments: dict= dict()
 
     def get_id(self):

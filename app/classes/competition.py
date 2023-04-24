@@ -10,8 +10,6 @@ class Competition(object, metaclass=ABCMeta):
 
         self._matches = matches
 
-        # self._matches: Match = MatchTree()
-
     def get_players(self) -> list:
         return self._players
 

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {{ super()}}
 {% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/rankings.css') }}"/>
      <script src="{{ url_for('static',filename='jquery/jquery.min.js') }}"></script>
      <script src="{{ url_for('static',filename='jquery/jTournament.js') }}"></script>
      <style>
          .parent-wrapper {
-            display: flex;
             width: 100%;
         }
 
@@ -18,7 +18,7 @@
         .content-wrapper:first-child {
             overflow: auto;
             max-width: 100%;
-            width: fit-content;
+            width: 98%;
         }
 
         /* Media query for mobile devices */
@@ -44,13 +44,15 @@
         <div class="content-wrapper">
             <canvas id="tournament"></canvas>
         </div>
-        <div class="content-wrapper">
+        <div style="width: 100%; margin-bottom: 100px"> 
             {% for i, t in enumerate(players) %}
-            <table id="{{ i }}" style="display: none;">
+            <table id="{{ i }}" class="rankings-table center" style="text-align: center; display: none; width: 90%">
+            <thead>
                 <tr>
-                    <th>player</th>
-                    <th>prize</th>
+                    <th>Player</th>
+                    <th>Prize</th>
                 </tr>
+            </thead>
                 {% for pl, pz in t.items() %}
                     <tr>
                         <td>{{ pl.get_name() }}</td>

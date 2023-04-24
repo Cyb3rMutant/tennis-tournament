@@ -114,6 +114,7 @@ class Model():
         tournament = self.__seasons[ObjectId(s_id)].get_tournaments()[ObjectId(t_id)]
         self.load_tournament(tournament)
         self.__tournament_cache[t_id] = [tournament.to_json(), datetime.now(), tournament]
+        print(self.__tournament_cache)
         return self.__tournament_cache[t_id][0]
 
     def get_tournament_winners_and_prizes(self, s_id, t_id):
