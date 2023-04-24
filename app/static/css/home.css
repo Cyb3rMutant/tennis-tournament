@@ -1,0 +1,36 @@
+
+.main-logo {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    height: 200px; 
+    margin-left: 0px; 
+    font-size: 50px;
+}
+
+.main-logo p {
+    font-size: 50px !important;
+}
+
+
+.main-logo p:hover {
+    color: #fff;
+}
+
+
+/*Tablet*/
+@media only screen and (min-width: 992px) {
+    .main-logo p {
+        font-size: 75px !important;
+    }
+    
+}
+
+/*Desktop*/
+@media only screen and (min-width: 1400px) {
+
+    .main-logo p {
+        font-size: 100px !important;
+    }
+    
+}

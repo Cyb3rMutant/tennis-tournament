@@ -1,7 +1,32 @@
 
 
 {% extends "base.html" %}
+
+{% block head %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/home.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+{% endblock %}
+
+
 {{ super()}}
 {% block content %}
-<h1 style="color: white;">HELLO THERE :)))</h1>
+
+<div class="main-logo">
+    <p class="navbar-brand horizon">Horizon</p> 
+    <p class="navbar-brand tennis">Tennis</p>
+</div>	
+
+<div class="center" style="border: 2px solid #8cff00ce; width: 80%; height: 100%; background-color: #0d0a149a; margin-top: 26px; margin-bottom: 64px;">
+    <p style="color: #fff; font-family: 'Montserrat', sans-serif; font-size: 24px; padding: 18px; font-weight: bold;">
+        Welcome to our tennis website! We are a dedicated platform for tennis enthusiasts who want to stay up-to-date with the latest seasons, tournaments, competitions, and matches.
+        <br>
+        <br>
+        Our website offers an extensive database of all the major tennis seasons from around the world, which includes tournaments like TAC1, TAE21, TAW11, and other renowned competitions. You can view the schedules of these seasons and never miss a match again.
+        <br>
+        <br>
+        We also provide detailed information about various tennis tournaments, both past and present, along with the matches' dates and venues. Our website's feature of viewing competitions allows you to see the top players' performance and their current rankings. 
+    </p>
+</div>
+
+</div>
 {% endblock %}
